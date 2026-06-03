@@ -1,0 +1,27 @@
+package com.saoma.pos.mapper;
+
+import com.saoma.pos.entity.Sale;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import java.util.Date;
+import java.util.List;
+
+@Mapper
+public interface SaleMapper {
+
+    int insert(Sale sale);
+
+    List<Sale> findAll();
+
+    Sale findById(Long id);
+
+    Sale findByOrderNo(String orderNo);
+
+    List<Sale> findByDate(String date);
+
+    List<Sale> findByDateRange(@Param("start") Date start, @Param("end") Date end);
+
+    List<Sale> findByStatus(Integer status);
+
+    int updateStatus(@Param("id") Long id, @Param("status") Integer status);
+}

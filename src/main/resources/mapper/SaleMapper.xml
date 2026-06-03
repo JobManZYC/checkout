@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saoma.pos.mapper.SaleMapper">
+
+    <resultMap id="SaleResultMap" type="com.saoma.pos.entity.Sale">
+        <id property="id" column="id"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="totalAmount" column="total_amount"/>
+        <result property="discountAmount" column="discount_amount"/>
+        <result property="payAmount" column="pay_amount"/>
+        <result property="payType" column="pay_type"/>
+        <result property="changeAmount" column="change_amount"/>
+        <result property="remark" column="remark"/>
+        <result property="status" column="status"/>
+        <result property="cashierId" column="cashier_id"/>
+        <result property="cashierName" column="cashier_name"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.saoma.pos.entity.Sale" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sale(order_no, total_amount, discount_amount, pay_amount, pay_type,
+                         change_amount, remark, status, cashier_id, cashier_name, create_time)
+        VALUES(#{orderNo}, #{totalAmount}, #{discountAmount}, #{payAmount}, #{payType},
+               #{changeAmount}, #{remark}, #{status}, #{cashierId}, #{cashierName}, NOW())
+    </insert>
+
+    <select id="findAll" resultMap="SaleResultMap">
+        SELECT * FROM sale ORDER BY id DESC LIMIT 100
+    </select>
+
+    <select id="findById" resultMap="SaleResultMap" parameterType="long">
+        SELECT * FROM sale WHERE id = #{id}
+    </select>
+
+    <select id="findByOrderNo" resultMap="SaleResultMap" parameterType="string">
+        SELECT * FROM sale WHERE order_no = #{orderNo}
+    </select>
+
+    <select id="findByDate" resultMap="SaleResultMap" parameterType="string">
+        SELECT * FROM sale WHERE DATE(create_time) = #{date} ORDER BY id DESC
+    </select>
+
+    <select id="findByDateRange" resultMap="SaleResultMap">
+        SELECT * FROM sale WHERE create_time BETWEEN #{start} AND #{end} ORDER BY id DESC
+    </select>
+
+    <select id="findByStatus" resultMap="SaleResultMap" parameterType="int">
+        SELECT * FROM sale WHERE status = #{status} ORDER BY id DESC
+    </select>
+
+    <update id="updateStatus">
+        UPDATE sale SET status = #{status} WHERE id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.saoma.pos.mapper.SaleItemMapper">
+
+    <resultMap id="SaleItemResultMap" type="com.saoma.pos.entity.SaleItem">
+        <id property="id" column="id"/>
+        <result property="saleId" column="sale_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="barcode" column="barcode"/>
+        <result property="price" column="price"/>
+        <result property="quantity" column="quantity"/>
+        <result property="subtotal" column="subtotal"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.saoma.pos.entity.SaleItem" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO sale_item(sale_id, product_id, product_name, barcode, price, quantity, subtotal)
+        VALUES(#{saleId}, #{productId}, #{productName}, #{barcode}, #{price}, #{quantity}, #{subtotal})
+    </insert>
+
+    <insert id="batchInsert">
+        INSERT INTO sale_item(sale_id, product_id, product_name, barcode, price, quantity, subtotal) VALUES
+        <foreach collection="items" item="item" separator=",">
+            (#{item.saleId}, #{item.productId}, #{item.productName}, #{item.barcode}, #{item.price}, #{item.quantity}, #{item.subtotal})
+        </foreach>
+    </insert>
+
+    <select id="findBySaleId" resultMap="SaleItemResultMap" parameterType="long">
+        SELECT * FROM sale_item WHERE sale_id = #{saleId}
+    </select>
+
+</mapper>
