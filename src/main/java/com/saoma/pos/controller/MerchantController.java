@@ -41,10 +41,10 @@ public class MerchantController {
     }
 
     @ApiOperation("根据ID查询商户")
-    @GetMapping("/{id}")
+    @GetMapping("/getById")
     public Result<Merchant> getById(
             @ApiParam(value = "商户ID", required = true, example = "1")
-            @PathVariable Long id) {
+            @RequestParam Long id) {
         return Result.success(merchantService.findById(id));
     }
 
@@ -57,10 +57,10 @@ public class MerchantController {
     }
 
     @ApiOperation("删除商户")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete")
     public Result<Integer> delete(
             @ApiParam(value = "商户ID", required = true, example = "1")
-            @PathVariable Long id) {
+            @RequestParam Long id) {
         return Result.success(merchantService.deleteById(id));
     }
 }

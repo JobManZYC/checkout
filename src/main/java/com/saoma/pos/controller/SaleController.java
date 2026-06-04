@@ -35,10 +35,10 @@ public class SaleController {
     public Result<List<Sale>> list() { return Result.success(saleService.findAll()); }
 
     @ApiOperation("根据商户ID获取订单列表")
-    @GetMapping("/merchant/{merchantId}")
+    @GetMapping("/listByMerchant")
     public Result<List<Sale>> listByMerchant(
             @ApiParam(value = "商户ID", required = true)
-            @PathVariable Long merchantId) {
+            @RequestParam Long merchantId) {
         return Result.success(saleService.findByMerchantId(merchantId));
     }
 
@@ -60,20 +60,20 @@ public class SaleController {
     }
 
     @ApiOperation("根据ID查询订单")
-    @GetMapping("/{id}")
+    @GetMapping("/getById")
     public Result<Sale> getById(
             @ApiParam(value = "订单ID", required = true, example = "1")
-            @PathVariable Long id) { return Result.success(saleService.findById(id)); }
+            @RequestParam Long id) { return Result.success(saleService.findById(id)); }
 
     @ApiOperation("查询订单明细")
-    @GetMapping("/{id}/items")
+    @GetMapping("/getItems")
     public Result<List<SaleItem>> getItems(
             @ApiParam(value = "订单ID", required = true, example = "1")
-            @PathVariable Long id) { return Result.success(saleService.getSaleItems(id)); }
+            @RequestParam Long id) { return Result.success(saleService.getSaleItems(id)); }
 
     @ApiOperation("根据日期查询订单")
-    @GetMapping("/date/{date}")
+    @GetMapping("/getByDate")
     public Result<List<Sale>> getByDate(
             @ApiParam(value = "日期（yyyy-MM-dd）", required = true, example = "2024-06-03")
-            @PathVariable String date) { return Result.success(saleService.findByDate(date)); }
+            @RequestParam String date) { return Result.success(saleService.findByDate(date)); }
 }

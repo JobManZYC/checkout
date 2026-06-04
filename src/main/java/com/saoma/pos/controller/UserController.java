@@ -44,10 +44,10 @@ public class UserController {
     public Result<List<User>> list() { return Result.success(userService.findAll()); }
 
     @ApiOperation("根据商户ID获取用户列表")
-    @GetMapping("/merchant/{merchantId}")
+    @GetMapping("/listByMerchant")
     public Result<List<User>> listByMerchant(
             @ApiParam(value = "商户ID", required = true)
-            @PathVariable Long merchantId) {
+            @RequestParam Long merchantId) {
         return Result.success(userService.findByMerchantId(merchantId));
     }
 
@@ -73,8 +73,8 @@ public class UserController {
             @RequestBody User user) { return Result.success(userService.save(user)); }
 
     @ApiOperation("删除用户")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete")
     public Result<Integer> delete(
             @ApiParam(value = "用户ID", required = true, example = "1")
-            @PathVariable Long id) { return Result.success(userService.deleteById(id)); }
+            @RequestParam Long id) { return Result.success(userService.deleteById(id)); }
 }
