@@ -15,18 +15,6 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
-    <select id="findAll" resultMap="UserResultMap">
-        SELECT * FROM user ORDER BY id DESC
-    </select>
-
-    <select id="findByMerchantId" resultMap="UserResultMap">
-        SELECT * FROM user WHERE merchant_id = #{merchantId} ORDER BY id DESC
-    </select>
-
-    <select id="findById" resultMap="UserResultMap" parameterType="long">
-        SELECT * FROM user WHERE id = #{id}
-    </select>
-
     <select id="findByUsername" resultMap="UserResultMap">
         SELECT * FROM user WHERE username = #{username}
     </select>
@@ -34,27 +22,5 @@
     <select id="login" resultMap="UserResultMap">
         SELECT * FROM user WHERE username = #{username} AND password = #{password} AND status = 1
     </select>
-
-    <insert id="insert" parameterType="com.saoma.pos.entity.User" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO user(merchant_id, username, password, real_name, phone, role, status, create_time, update_time)
-        VALUES(#{merchantId}, #{username}, #{password}, #{realName}, #{phone}, #{role}, #{status}, NOW(), NOW())
-    </insert>
-
-    <update id="update" parameterType="com.saoma.pos.entity.User">
-        UPDATE user
-        SET merchant_id = #{merchantId},
-            username = #{username},
-            password = #{password},
-            real_name = #{realName},
-            phone = #{phone},
-            role = #{role},
-            status = #{status},
-            update_time = NOW()
-        WHERE id = #{id}
-    </update>
-
-    <delete id="deleteById" parameterType="long">
-        DELETE FROM user WHERE id = #{id}
-    </delete>
 
 </mapper>

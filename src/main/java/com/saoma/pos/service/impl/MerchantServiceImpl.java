@@ -1,5 +1,6 @@
 package com.saoma.pos.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.saoma.pos.entity.Merchant;
 import com.saoma.pos.mapper.MerchantMapper;
 import com.saoma.pos.service.MerchantService;
@@ -16,12 +17,13 @@ public class MerchantServiceImpl implements MerchantService {
 
     @Override
     public List<Merchant> findAll() {
-        return merchantMapper.findAll();
+        return merchantMapper.selectList(
+                new LambdaQueryWrapper<Merchant>().orderByDesc(Merchant::getId));
     }
 
     @Override
     public Merchant findById(Long id) {
-        return merchantMapper.findById(id);
+        return merchantMapper.selectById(id);
     }
 
     @Override
@@ -30,7 +32,7 @@ public class MerchantServiceImpl implements MerchantService {
             merchant.setStatus(1);
             return merchantMapper.insert(merchant);
         }
-        return merchantMapper.update(merchant);
+        return merchantMapper.updateById(merchant);
     }
 
     @Override

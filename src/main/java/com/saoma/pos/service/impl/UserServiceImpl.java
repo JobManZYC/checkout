@@ -1,5 +1,6 @@
 package com.saoma.pos.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.saoma.pos.entity.User;
 import com.saoma.pos.mapper.UserMapper;
 import com.saoma.pos.service.UserService;
@@ -16,17 +17,20 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAll() {
-        return userMapper.findAll();
+        return userMapper.selectList(new LambdaQueryWrapper<User>().orderByDesc(User::getId));
     }
 
     @Override
     public List<User> findByMerchantId(Long merchantId) {
-        return userMapper.findByMerchantId(merchantId);
+        return userMapper.selectList(
+                new LambdaQueryWrapper<User>()
+                        .eq(User::getMerchantId, merchantId)
+                        .orderByDesc(User::getId));
     }
 
     @Override
     public User findById(Long id) {
-        return userMapper.findById(id);
+        return userMapper.selectById(id);
     }
 
     @Override
@@ -40,7 +44,7 @@ public class UserServiceImpl implements UserService {
             user.setStatus(1);
             return userMapper.insert(user);
         }
-        return userMapper.update(user);
+        return userMapper.updateById(user);
     }
 
     @Override

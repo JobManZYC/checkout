@@ -1,4 +1,5 @@
 package com.saoma.pos.config;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.saoma.pos.entity.Merchant;
 import com.saoma.pos.entity.Product;
 import com.saoma.pos.entity.User;
@@ -9,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
-import java.util.List;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -23,7 +23,7 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // 1. 创建默认商户（如果没有任何商户）
-        if (merchantMapper.findAll().isEmpty()) {
+        if (merchantMapper.selectList(null).isEmpty()) {
             Merchant defaultMerchant = new Merchant();
             defaultMerchant.setName("默认商户");
             defaultMerchant.setContactName("管理员");
@@ -34,10 +34,11 @@ public class DataInitializer implements CommandLineRunner {
             merchantMapper.insert(defaultMerchant);
         }
 
-        Long defaultMerchantId = merchantMapper.findAll().get(0).getId();
+        Long defaultMerchantId = merchantMapper.selectList(
+                new LambdaQueryWrapper<Merchant>().orderByDesc(Merchant::getId)).get(0).getId();
 
         // 2. 初始化超级管理员（如果没有任何用户）
-        if (userMapper.findAll().isEmpty()) {
+        if (userMapper.selectList(null).isEmpty()) {
             User superAdmin = new User();
             superAdmin.setMerchantId(0L); // 0 = 超级管理员
             superAdmin.setUsername("superadmin");
@@ -72,7 +73,8 @@ public class DataInitializer implements CommandLineRunner {
         }
 
         // 3. 初始化默认商户的示例商品（如果该商户没有任何商品）
-        if (productMapper.findByMerchantId(defaultMerchantId).isEmpty()) {
+        if (productMapper.selectList(
+                new LambdaQueryWrapper<Product>().eq(Product::getMerchantId, defaultMerchantId)).isEmpty()) {
             String[] barcodes = {"6901028012345","6901028012352","6901028012369","6901028012376","6901028012383","6901028012390","6901028012406","6901028012413"};
             String[] names = {"可口可乐330ml","雪碧330ml","康师傅方便面","农夫山泉550ml","奥利奥饼干","伊利纯牛奶250ml","卫龙辣条","乐事薯片"};
             String[] categories = {"饮料","饮料","食品","饮料","零食","乳品","零食","零食"};

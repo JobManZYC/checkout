@@ -19,7 +19,7 @@
 
     <properties>
         <java.version>1.8</java.version>
-        <mybatis-spring-boot.version>2.3.2</mybatis-spring-boot.version>
+        <mybatis-plus.version>3.5.3.1</mybatis-plus.version>
         <druid.version>1.2.20</druid.version>
     </properties>
 
@@ -30,11 +30,11 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- MyBatis -->
+        <!-- MyBatis-Plus -->
         <dependency>
-            <groupId>org.mybatis.spring.boot</groupId>
-            <artifactId>mybatis-spring-boot-starter</artifactId>
-            <version>${mybatis-spring-boot.version}</version>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus.version}</version>
         </dependency>
 
         <!-- MySQL -->

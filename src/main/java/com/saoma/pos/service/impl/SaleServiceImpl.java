@@ -1,5 +1,6 @@
 package com.saoma.pos.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.saoma.pos.entity.Sale;
 import com.saoma.pos.entity.SaleItem;
 import com.saoma.pos.mapper.SaleItemMapper;
@@ -43,17 +44,22 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public List<Sale> findAll() {
-        return saleMapper.findAll();
+        return saleMapper.selectList(
+                new LambdaQueryWrapper<Sale>().orderByDesc(Sale::getId).last("LIMIT 100"));
     }
 
     @Override
     public List<Sale> findByMerchantId(Long merchantId) {
-        return saleMapper.findByMerchantId(merchantId);
+        return saleMapper.selectList(
+                new LambdaQueryWrapper<Sale>()
+                        .eq(Sale::getMerchantId, merchantId)
+                        .orderByDesc(Sale::getId)
+                        .last("LIMIT 100"));
     }
 
     @Override
     public Sale findById(Long id) {
-        return saleMapper.findById(id);
+        return saleMapper.selectById(id);
     }
 
     @Override

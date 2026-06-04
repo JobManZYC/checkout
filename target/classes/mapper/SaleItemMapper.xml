@@ -14,11 +14,6 @@
         <result property="subtotal" column="subtotal"/>
     </resultMap>
 
-    <insert id="insert" parameterType="com.saoma.pos.entity.SaleItem" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO sale_item(sale_id, merchant_id, product_id, product_name, barcode, price, quantity, subtotal)
-        VALUES(#{saleId}, #{merchantId}, #{productId}, #{productName}, #{barcode}, #{price}, #{quantity}, #{subtotal})
-    </insert>
-
     <insert id="batchInsert">
         INSERT INTO sale_item(sale_id, merchant_id, product_id, product_name, barcode, price, quantity, subtotal) VALUES
         <foreach collection="items" item="item" separator=",">

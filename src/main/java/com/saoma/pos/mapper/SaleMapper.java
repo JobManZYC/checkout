@@ -1,5 +1,6 @@
 package com.saoma.pos.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.saoma.pos.entity.Sale;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -7,15 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 @Mapper
-public interface SaleMapper {
-
-    int insert(Sale sale);
-
-    List<Sale> findAll();
-
-    List<Sale> findByMerchantId(@Param("merchantId") Long merchantId);
-
-    Sale findById(Long id);
+public interface SaleMapper extends BaseMapper<Sale> {
 
     Sale findByOrderNo(String orderNo);
 

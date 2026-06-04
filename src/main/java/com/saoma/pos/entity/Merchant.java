@@ -1,11 +1,13 @@
 package com.saoma.pos.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.util.Date;
 
 @Data
+@TableName("merchant")
 @ApiModel(description = "商户信息")
 public class Merchant {
     @ApiModelProperty(value = "商户ID", example = "1")

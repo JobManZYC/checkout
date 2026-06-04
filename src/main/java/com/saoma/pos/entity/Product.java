@@ -1,5 +1,6 @@
 package com.saoma.pos.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -7,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
+@TableName("product")
 @ApiModel(description = "商品信息")
 public class Product {
     @ApiModelProperty(value = "商品ID", example = "1")

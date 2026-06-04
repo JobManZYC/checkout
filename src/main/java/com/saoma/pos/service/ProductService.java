@@ -1,5 +1,6 @@
 package com.saoma.pos.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.saoma.pos.entity.Product;
 import java.util.List;
 
@@ -8,6 +9,8 @@ public interface ProductService {
     List<Product> findAll();
 
     List<Product> findByMerchantId(Long merchantId);
+
+    Page<Product> pageByMerchant(Long merchantId, int page, int pageSize, String keyword, String category);
 
     Product findByBarcode(String barcode);
 

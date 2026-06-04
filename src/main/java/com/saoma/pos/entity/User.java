@@ -1,11 +1,13 @@
 package com.saoma.pos.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import java.util.Date;
 
 @Data
+@TableName("user")
 @ApiModel(description = "系统用户")
 public class User {
     @ApiModelProperty(value = "用户ID", example = "1")

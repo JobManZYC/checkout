@@ -18,14 +18,6 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
-    <select id="findAll" resultMap="ProductResultMap">
-        SELECT * FROM product ORDER BY id DESC
-    </select>
-
-    <select id="findByMerchantId" resultMap="ProductResultMap">
-        SELECT * FROM product WHERE merchant_id = #{merchantId} ORDER BY id DESC
-    </select>
-
     <select id="findByBarcode" resultMap="ProductResultMap">
         SELECT * FROM product WHERE barcode = #{barcode} LIMIT 1
     </select>
@@ -33,52 +25,6 @@
     <select id="findByMerchantAndBarcode" resultMap="ProductResultMap">
         SELECT * FROM product WHERE merchant_id = #{merchantId} AND barcode = #{barcode} LIMIT 1
     </select>
-
-    <select id="findById" resultMap="ProductResultMap" parameterType="long">
-        SELECT * FROM product WHERE id = #{id}
-    </select>
-
-    <select id="findByCategory" resultMap="ProductResultMap" parameterType="string">
-        SELECT * FROM product WHERE category = #{category} ORDER BY id DESC
-    </select>
-
-    <select id="search" resultMap="ProductResultMap" parameterType="string">
-        SELECT * FROM product
-        WHERE name LIKE CONCAT('%', #{keyword}, '%')
-           OR barcode LIKE CONCAT('%', #{keyword}, '%')
-    </select>
-
-    <select id="searchByMerchant" resultMap="ProductResultMap">
-        SELECT * FROM product
-        WHERE merchant_id = #{merchantId}
-          AND (name LIKE CONCAT('%', #{keyword}, '%')
-           OR barcode LIKE CONCAT('%', #{keyword}, '%'))
-    </select>
-
-    <insert id="insert" parameterType="com.saoma.pos.entity.Product" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO product(merchant_id, barcode, name, category, price, cost, stock, unit, remark, status, create_time, update_time)
-        VALUES(#{merchantId}, #{barcode}, #{name}, #{category}, #{price}, #{cost}, #{stock}, #{unit}, #{remark}, #{status}, NOW(), NOW())
-    </insert>
-
-    <update id="update" parameterType="com.saoma.pos.entity.Product">
-        UPDATE product
-        SET merchant_id = #{merchantId},
-            barcode = #{barcode},
-            name = #{name},
-            category = #{category},
-            price = #{price},
-            cost = #{cost},
-            stock = #{stock},
-            unit = #{unit},
-            remark = #{remark},
-            status = #{status},
-            update_time = NOW()
-        WHERE id = #{id}
-    </update>
-
-    <delete id="deleteById" parameterType="long">
-        DELETE FROM product WHERE id = #{id}
-    </delete>
 
     <update id="decreaseStock">
         UPDATE product SET stock = stock - #{quantity} WHERE id = #{id}

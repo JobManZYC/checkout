@@ -1,5 +1,6 @@
 package com.saoma.pos.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.saoma.pos.entity.User;
 import java.util.List;
 
