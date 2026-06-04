@@ -1,7 +1,7 @@
 package com.saoma.pos.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.saoma.pos.entity.Product;
+import com.saoma.pos.pojo.entity.Product;
 import java.util.List;
 
 public interface ProductService {

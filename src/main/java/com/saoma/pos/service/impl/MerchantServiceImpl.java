@@ -2,7 +2,7 @@ package com.saoma.pos.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.saoma.pos.entity.Merchant;
+import com.saoma.pos.pojo.entity.Merchant;
 import com.saoma.pos.mapper.MerchantMapper;
 import com.saoma.pos.service.MerchantService;
 import org.springframework.beans.factory.annotation.Autowired;

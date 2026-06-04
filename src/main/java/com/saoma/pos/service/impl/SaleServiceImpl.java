@@ -2,8 +2,8 @@ package com.saoma.pos.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.saoma.pos.entity.Sale;
-import com.saoma.pos.entity.SaleItem;
+import com.saoma.pos.pojo.entity.Sale;
+import com.saoma.pos.pojo.entity.SaleItem;
 import com.saoma.pos.mapper.SaleItemMapper;
 import com.saoma.pos.mapper.SaleMapper;
 import com.saoma.pos.service.ProductService;

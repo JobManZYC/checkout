@@ -1,7 +1,7 @@
 package com.saoma.pos.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.saoma.pos.entity.Product;
+import com.saoma.pos.pojo.entity.Product;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;

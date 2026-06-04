@@ -2,7 +2,7 @@ package com.saoma.pos.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.saoma.pos.common.Result;
-import com.saoma.pos.entity.User;
+import com.saoma.pos.pojo.entity.User;
 import com.saoma.pos.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

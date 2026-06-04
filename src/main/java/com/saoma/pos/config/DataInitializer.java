@@ -1,8 +1,8 @@
 package com.saoma.pos.config;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.saoma.pos.entity.Merchant;
-import com.saoma.pos.entity.Product;
-import com.saoma.pos.entity.User;
+import com.saoma.pos.pojo.entity.Merchant;
+import com.saoma.pos.pojo.entity.Product;
+import com.saoma.pos.pojo.entity.User;
 import com.saoma.pos.mapper.MerchantMapper;
 import com.saoma.pos.mapper.ProductMapper;
 import com.saoma.pos.mapper.UserMapper;
