@@ -10,6 +10,8 @@ public interface UserService {
 
     List<User> findByMerchantId(Long merchantId);
 
+    Page<User> page(Long merchantId, int page, int pageSize, String keyword);
+
     User findById(Long id);
 
     User login(String username, String password);

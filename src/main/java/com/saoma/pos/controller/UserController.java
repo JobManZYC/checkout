@@ -1,5 +1,6 @@
 package com.saoma.pos.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.saoma.pos.common.Result;
 import com.saoma.pos.entity.User;
 import com.saoma.pos.service.UserService;
@@ -48,6 +49,21 @@ public class UserController {
             @ApiParam(value = "商户ID", required = true)
             @PathVariable Long merchantId) {
         return Result.success(userService.findByMerchantId(merchantId));
+    }
+
+    @ApiOperation("分页获取用户列表")
+    @GetMapping("/page")
+    public Result<Page<User>> page(
+            @ApiParam(value = "商户ID（超级管理员传null）")
+            @RequestParam(required = false) Long merchantId,
+            @ApiParam(value = "页码", defaultValue = "1")
+            @RequestParam(defaultValue = "1") int page,
+            @ApiParam(value = "每页数量", defaultValue = "20")
+            @RequestParam(defaultValue = "20") int pageSize,
+            @ApiParam(value = "搜索关键词（用户名/姓名/手机号）")
+            @RequestParam(required = false) String keyword) {
+        Page<User> result = userService.page(merchantId, page, pageSize, keyword);
+        return Result.success(result);
     }
 
     @ApiOperation("新增或更新用户")

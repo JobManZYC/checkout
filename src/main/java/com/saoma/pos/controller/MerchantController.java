@@ -1,5 +1,6 @@
 package com.saoma.pos.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.saoma.pos.common.Result;
 import com.saoma.pos.entity.Merchant;
 import com.saoma.pos.service.MerchantService;
@@ -24,6 +25,19 @@ public class MerchantController {
     @GetMapping("/list")
     public Result<List<Merchant>> list() {
         return Result.success(merchantService.findAll());
+    }
+
+    @ApiOperation("分页获取商户列表")
+    @GetMapping("/page")
+    public Result<Page<Merchant>> page(
+            @ApiParam(value = "页码", defaultValue = "1")
+            @RequestParam(defaultValue = "1") int page,
+            @ApiParam(value = "每页数量", defaultValue = "20")
+            @RequestParam(defaultValue = "20") int pageSize,
+            @ApiParam(value = "搜索关键词（名称/联系人/电话）")
+            @RequestParam(required = false) String keyword) {
+        Page<Merchant> result = merchantService.page(page, pageSize, keyword);
+        return Result.success(result);
     }
 
     @ApiOperation("根据ID查询商户")

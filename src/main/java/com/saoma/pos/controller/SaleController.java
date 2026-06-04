@@ -1,5 +1,6 @@
 package com.saoma.pos.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.saoma.pos.common.Result;
 import com.saoma.pos.entity.Sale;
 import com.saoma.pos.entity.SaleItem;
@@ -39,6 +40,23 @@ public class SaleController {
             @ApiParam(value = "商户ID", required = true)
             @PathVariable Long merchantId) {
         return Result.success(saleService.findByMerchantId(merchantId));
+    }
+
+    @ApiOperation("根据商户ID分页获取订单列表")
+    @GetMapping("/merchant/{merchantId}/page")
+    public Result<Page<Sale>> pageByMerchant(
+            @ApiParam(value = "商户ID", required = true)
+            @PathVariable Long merchantId,
+            @ApiParam(value = "页码", defaultValue = "1")
+            @RequestParam(defaultValue = "1") int page,
+            @ApiParam(value = "每页数量", defaultValue = "20")
+            @RequestParam(defaultValue = "20") int pageSize,
+            @ApiParam(value = "订单号/收银员关键词")
+            @RequestParam(required = false) String keyword,
+            @ApiParam(value = "日期（yyyy-MM-dd）")
+            @RequestParam(required = false) String date) {
+        Page<Sale> result = saleService.pageByMerchant(merchantId, page, pageSize, keyword, date);
+        return Result.success(result);
     }
 
     @ApiOperation("根据ID查询订单")

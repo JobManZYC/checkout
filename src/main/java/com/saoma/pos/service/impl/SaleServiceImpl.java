@@ -1,6 +1,7 @@
 package com.saoma.pos.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.saoma.pos.entity.Sale;
 import com.saoma.pos.entity.SaleItem;
 import com.saoma.pos.mapper.SaleItemMapper;
@@ -10,6 +11,7 @@ import com.saoma.pos.service.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -55,6 +57,21 @@ public class SaleServiceImpl implements SaleService {
                         .eq(Sale::getMerchantId, merchantId)
                         .orderByDesc(Sale::getId)
                         .last("LIMIT 100"));
+    }
+
+    @Override
+    public Page<Sale> pageByMerchant(Long merchantId, int page, int pageSize, String keyword, String date) {
+        Page<Sale> pageParam = new Page<>(page, pageSize);
+        LambdaQueryWrapper<Sale> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Sale::getMerchantId, merchantId);
+        if (StringUtils.hasText(keyword)) {
+            wrapper.and(w -> w.like(Sale::getOrderNo, keyword).or().like(Sale::getCashierName, keyword));
+        }
+        if (StringUtils.hasText(date)) {
+            wrapper.apply("DATE(create_time) = {0}", date);
+        }
+        wrapper.orderByDesc(Sale::getId);
+        return saleMapper.selectPage(pageParam, wrapper);
     }
 
     @Override

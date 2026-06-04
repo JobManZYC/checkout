@@ -13,6 +13,8 @@ public interface SaleService {
 
     List<Sale> findByMerchantId(Long merchantId);
 
+    Page<Sale> pageByMerchant(Long merchantId, int page, int pageSize, String keyword, String date);
+
     Sale findById(Long id);
 
     Sale findByOrderNo(String orderNo);
