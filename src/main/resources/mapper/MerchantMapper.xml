@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.saoma.pos.mapper.MerchantMapper">
 
-    <resultMap id="MerchantResultMap" type="com.saoma.pos.entity.Merchant">
+    <resultMap id="MerchantResultMap" type="com.saoma.pos.pojo.entity.Merchant">
         <id property="id" column="id"/>
         <result property="name" column="name"/>
         <result property="contactName" column="contact_name"/>
@@ -22,12 +22,12 @@
         SELECT * FROM merchant WHERE id = #{id}
     </select>
 
-    <insert id="insert" parameterType="com.saoma.pos.entity.Merchant" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insert" parameterType="com.saoma.pos.pojo.entity.Merchant" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO merchant(name, contact_name, contact_phone, address, remark, status, create_time, update_time)
         VALUES(#{name}, #{contactName}, #{contactPhone}, #{address}, #{remark}, #{status}, NOW(), NOW())
     </insert>
 
-    <update id="update" parameterType="com.saoma.pos.entity.Merchant">
+    <update id="update" parameterType="com.saoma.pos.pojo.entity.Merchant">
         UPDATE merchant
         SET name = #{name},
             contact_name = #{contactName},

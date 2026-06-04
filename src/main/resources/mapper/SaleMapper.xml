@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.saoma.pos.mapper.SaleMapper">
 
-    <resultMap id="SaleResultMap" type="com.saoma.pos.entity.Sale">
+    <resultMap id="SaleResultMap" type="com.saoma.pos.pojo.entity.Sale">
         <id property="id" column="id"/>
         <result property="merchantId" column="merchant_id"/>
         <result property="orderNo" column="order_no"/>
