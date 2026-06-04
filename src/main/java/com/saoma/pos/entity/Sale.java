@@ -1,5 +1,6 @@
 package com.saoma.pos.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -52,5 +53,6 @@ public class Sale {
     private Date createTime;
 
     @ApiModelProperty(value = "订单明细")
+    @TableField(exist = false)
     private List<SaleItem> items;
 }

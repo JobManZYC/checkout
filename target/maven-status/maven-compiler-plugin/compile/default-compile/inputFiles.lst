@@ -22,6 +22,7 @@ C:\Users\EDY\Desktop\saoma\backend\src\main\java\com\saoma\pos\entity\User.java
 C:\Users\EDY\Desktop\saoma\backend\src\main\java\com\saoma\pos\config\DataInitializer.java
 C:\Users\EDY\Desktop\saoma\backend\src\main\java\com\saoma\pos\common\Result.java
 C:\Users\EDY\Desktop\saoma\backend\src\main\java\com\saoma\pos\entity\Sale.java
+C:\Users\EDY\Desktop\saoma\backend\src\main\java\com\saoma\pos\config\MybatisPlusConfig.java
 C:\Users\EDY\Desktop\saoma\backend\src\main\java\com\saoma\pos\entity\Merchant.java
 C:\Users\EDY\Desktop\saoma\backend\src\main\java\com\saoma\pos\PosApplication.java
 C:\Users\EDY\Desktop\saoma\backend\src\main\java\com\saoma\pos\service\impl\ProductServiceImpl.java

@@ -42,11 +42,11 @@ public class SaleController {
         return Result.success(saleService.findByMerchantId(merchantId));
     }
 
-    @ApiOperation("根据商户ID分页获取订单列表")
-    @GetMapping("/merchant/{merchantId}/page")
-    public Result<Page<Sale>> pageByMerchant(
+    @ApiOperation("分页获取订单列表")
+    @GetMapping("/page")
+    public Result<Page<Sale>> page(
             @ApiParam(value = "商户ID", required = true)
-            @PathVariable Long merchantId,
+            @RequestParam Long merchantId,
             @ApiParam(value = "页码", defaultValue = "1")
             @RequestParam(defaultValue = "1") int page,
             @ApiParam(value = "每页数量", defaultValue = "20")
@@ -76,14 +76,4 @@ public class SaleController {
     public Result<List<Sale>> getByDate(
             @ApiParam(value = "日期（yyyy-MM-dd）", required = true, example = "2024-06-03")
             @PathVariable String date) { return Result.success(saleService.findByDate(date)); }
-
-    @ApiOperation("根据商户+日期查询订单")
-    @GetMapping("/merchant/{merchantId}/date/{date}")
-    public Result<List<Sale>> getByMerchantAndDate(
-            @ApiParam(value = "商户ID", required = true)
-            @PathVariable Long merchantId,
-            @ApiParam(value = "日期（yyyy-MM-dd）", required = true)
-            @PathVariable String date) {
-        return Result.success(saleService.findByMerchantAndDate(merchantId, date));
-    }
 }
