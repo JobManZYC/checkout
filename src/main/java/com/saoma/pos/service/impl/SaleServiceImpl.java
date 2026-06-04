@@ -2,8 +2,12 @@ package com.saoma.pos.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.saoma.pos.converter.SaleConverter;
+import com.saoma.pos.pojo.dto.SaleCheckoutDTO;
 import com.saoma.pos.pojo.entity.Sale;
 import com.saoma.pos.pojo.entity.SaleItem;
+import com.saoma.pos.pojo.vo.SaleItemVO;
+import com.saoma.pos.pojo.vo.SaleVO;
 import com.saoma.pos.mapper.SaleItemMapper;
 import com.saoma.pos.mapper.SaleMapper;
 import com.saoma.pos.service.ProductService;
@@ -30,11 +34,15 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     @Transactional
-    public int createSale(Sale sale, List<SaleItem> items) {
+    public int createSale(SaleCheckoutDTO dto) {
+        Sale sale = SaleConverter.toEntity(dto);
+        List<SaleItem> items = SaleConverter.toItemEntityList(dto.getItems());
+
         String orderNo = "POS" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
         sale.setOrderNo(orderNo);
         sale.setStatus(1);
         saleMapper.insert(sale);
+
         for (SaleItem item : items) {
             item.setSaleId(sale.getId());
             item.setMerchantId(sale.getMerchantId());
@@ -45,22 +53,24 @@ public class SaleServiceImpl implements SaleService {
     }
 
     @Override
-    public List<Sale> findAll() {
-        return saleMapper.selectList(
+    public List<SaleVO> findAll() {
+        List<Sale> list = saleMapper.selectList(
                 new LambdaQueryWrapper<Sale>().orderByDesc(Sale::getId).last("LIMIT 100"));
+        return SaleConverter.toVOList(list);
     }
 
     @Override
-    public List<Sale> findByMerchantId(Long merchantId) {
-        return saleMapper.selectList(
+    public List<SaleVO> findByMerchantId(Long merchantId) {
+        List<Sale> list = saleMapper.selectList(
                 new LambdaQueryWrapper<Sale>()
                         .eq(Sale::getMerchantId, merchantId)
                         .orderByDesc(Sale::getId)
                         .last("LIMIT 100"));
+        return SaleConverter.toVOList(list);
     }
 
     @Override
-    public Page<Sale> pageByMerchant(Long merchantId, int page, int pageSize, String keyword, String date) {
+    public Page<SaleVO> pageByMerchant(Long merchantId, int page, int pageSize, String keyword, String date) {
         Page<Sale> pageParam = new Page<>(page, pageSize);
         LambdaQueryWrapper<Sale> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Sale::getMerchantId, merchantId);
@@ -71,31 +81,47 @@ public class SaleServiceImpl implements SaleService {
             wrapper.apply("DATE(create_time) = {0}", date);
         }
         wrapper.orderByDesc(Sale::getId);
-        return saleMapper.selectPage(pageParam, wrapper);
+        Page<Sale> result = saleMapper.selectPage(pageParam, wrapper);
+        Page<SaleVO> voPage = new Page<>(result.getCurrent(), result.getSize(), result.getTotal());
+        voPage.setRecords(SaleConverter.toVOList(result.getRecords()));
+        return voPage;
     }
 
     @Override
-    public Sale findById(Long id) {
-        return saleMapper.selectById(id);
+    public SaleVO findById(Long id) {
+        Sale entity = saleMapper.selectById(id);
+        SaleVO vo = SaleConverter.toVO(entity);
+        if (vo != null) {
+            vo.setItems(SaleConverter.toItemVOList(getSaleItemsRaw(id)));
+        }
+        return vo;
     }
 
     @Override
-    public Sale findByOrderNo(String orderNo) {
-        return saleMapper.findByOrderNo(orderNo);
+    public SaleVO findByOrderNo(String orderNo) {
+        Sale entity = saleMapper.findByOrderNo(orderNo);
+        return SaleConverter.toVO(entity);
     }
 
     @Override
-    public List<Sale> findByDate(String date) {
-        return saleMapper.findByDate(date);
+    public List<SaleVO> findByDate(String date) {
+        List<Sale> list = saleMapper.findByDate(date);
+        return SaleConverter.toVOList(list);
     }
 
     @Override
-    public List<Sale> findByMerchantAndDate(Long merchantId, String date) {
-        return saleMapper.findByMerchantAndDate(merchantId, date);
+    public List<SaleVO> findByMerchantAndDate(Long merchantId, String date) {
+        List<Sale> list = saleMapper.findByMerchantAndDate(merchantId, date);
+        return SaleConverter.toVOList(list);
     }
 
     @Override
-    public List<SaleItem> getSaleItems(Long saleId) {
+    public List<SaleItemVO> getSaleItems(Long saleId) {
+        List<SaleItem> list = getSaleItemsRaw(saleId);
+        return SaleConverter.toItemVOList(list);
+    }
+
+    private List<SaleItem> getSaleItemsRaw(Long saleId) {
         return saleItemMapper.findBySaleId(saleId);
     }
 }

@@ -2,13 +2,16 @@ package com.saoma.pos.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.saoma.pos.common.Result;
-import com.saoma.pos.pojo.entity.Product;
+import com.saoma.pos.pojo.dto.ProductSaveDTO;
+import com.saoma.pos.pojo.vo.ProductVO;
 import com.saoma.pos.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 import java.util.List;
 
 @Api(tags = "商品管理")
@@ -21,11 +24,11 @@ public class ProductController {
 
     @ApiOperation("获取全部商品列表（超级管理员）")
     @GetMapping("/list")
-    public Result<List<Product>> list() { return Result.success(productService.findAll()); }
+    public Result<List<ProductVO>> list() { return Result.success(productService.findAll()); }
 
     @ApiOperation("根据商户 ID 获取商品列表")
     @GetMapping("/listByMerchant")
-    public Result<List<Product>> listByMerchant(
+    public Result<List<ProductVO>> listByMerchant(
             @ApiParam(value = "商户 ID", required = true)
             @RequestParam Long merchantId) {
         return Result.success(productService.findByMerchantId(merchantId));
@@ -33,7 +36,7 @@ public class ProductController {
 
     @ApiOperation("根据商户 ID 分页获取商品列表")
     @GetMapping("/pageByMerchant")
-    public Result<Page<Product>> pageByMerchant(
+    public Result<Page<ProductVO>> pageByMerchant(
             @ApiParam(value = "商户 ID", required = true)
             @RequestParam Long merchantId,
             @ApiParam(value = "页码", defaultValue = "1")
@@ -44,34 +47,33 @@ public class ProductController {
             @RequestParam(required = false) String keyword,
             @ApiParam(value = "分类")
             @RequestParam(required = false) String category) {
-
-        Page<Product> result = productService.pageByMerchant(merchantId, page, pageSize, keyword, category);
+        Page<ProductVO> result = productService.pageByMerchant(merchantId, page, pageSize, keyword, category);
         return Result.success(result);
     }
 
     @ApiOperation("根据条码查询商品")
     @GetMapping("/getByBarcode")
-    public Result<Product> getByBarcode(
+    public Result<ProductVO> getByBarcode(
             @ApiParam(value = "商品条码", required = true, example = "6921168511280")
             @RequestParam String barcode) {
-        Product p = productService.findByBarcode(barcode);
-        return p != null ? Result.success(p) : Result.error(404, "商品不存在");
+        ProductVO vo = productService.findByBarcode(barcode);
+        return vo != null ? Result.success(vo) : Result.error(404, "商品不存在");
     }
 
     @ApiOperation("根据商户 + 条码查询商品")
     @GetMapping("/getByMerchantAndBarcode")
-    public Result<Product> getByMerchantAndBarcode(
+    public Result<ProductVO> getByMerchantAndBarcode(
             @ApiParam(value = "商户 ID", required = true)
             @RequestParam Long merchantId,
             @ApiParam(value = "商品条码", required = true)
             @RequestParam String barcode) {
-        Product p = productService.findByMerchantAndBarcode(merchantId, barcode);
-        return p != null ? Result.success(p) : Result.error(404, "商品不存在");
+        ProductVO vo = productService.findByMerchantAndBarcode(merchantId, barcode);
+        return vo != null ? Result.success(vo) : Result.error(404, "商品不存在");
     }
 
     @ApiOperation("关键词搜索商品")
     @GetMapping("/search")
-    public Result<List<Product>> search(
+    public Result<List<ProductVO>> search(
             @ApiParam(value = "搜索关键词", required = true, example = "可乐")
             @RequestParam String keyword) {
         return Result.success(productService.search(keyword));
@@ -79,7 +81,7 @@ public class ProductController {
 
     @ApiOperation("根据商户关键词搜索商品")
     @GetMapping("/searchByMerchant")
-    public Result<List<Product>> searchByMerchant(
+    public Result<List<ProductVO>> searchByMerchant(
             @ApiParam(value = "商户 ID", required = true)
             @RequestParam Long merchantId,
             @ApiParam(value = "搜索关键词", required = true)
@@ -101,7 +103,7 @@ public class ProductController {
 
     @ApiOperation("根据 ID 查询商品")
     @GetMapping("/getById")
-    public Result<Product> getById(
+    public Result<ProductVO> getById(
             @ApiParam(value = "商品 ID", required = true, example = "1")
             @RequestParam Long id) { return Result.success(productService.findById(id)); }
 
@@ -109,7 +111,7 @@ public class ProductController {
     @PostMapping("/save")
     public Result<Integer> save(
             @ApiParam(value = "商品信息", required = true)
-            @RequestBody Product product) { return Result.success(productService.save(product)); }
+            @Valid @RequestBody ProductSaveDTO dto) { return Result.success(productService.save(dto)); }
 
     @ApiOperation("删除商品")
     @DeleteMapping("/delete")

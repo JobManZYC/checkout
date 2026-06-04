@@ -1,27 +1,29 @@
 package com.saoma.pos.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.saoma.pos.pojo.entity.Sale;
-import com.saoma.pos.pojo.entity.SaleItem;
+import com.saoma.pos.pojo.dto.SaleCheckoutDTO;
+import com.saoma.pos.pojo.vo.SaleItemVO;
+import com.saoma.pos.pojo.vo.SaleVO;
+
 import java.util.List;
 
 public interface SaleService {
 
-    int createSale(Sale sale, List<SaleItem> items);
+    int createSale(SaleCheckoutDTO dto);
 
-    List<Sale> findAll();
+    List<SaleVO> findAll();
 
-    List<Sale> findByMerchantId(Long merchantId);
+    List<SaleVO> findByMerchantId(Long merchantId);
 
-    Page<Sale> pageByMerchant(Long merchantId, int page, int pageSize, String keyword, String date);
+    Page<SaleVO> pageByMerchant(Long merchantId, int page, int pageSize, String keyword, String date);
 
-    Sale findById(Long id);
+    SaleVO findById(Long id);
 
-    Sale findByOrderNo(String orderNo);
+    SaleVO findByOrderNo(String orderNo);
 
-    List<Sale> findByDate(String date);
+    List<SaleVO> findByDate(String date);
 
-    List<Sale> findByMerchantAndDate(Long merchantId, String date);
+    List<SaleVO> findByMerchantAndDate(Long merchantId, String date);
 
-    List<SaleItem> getSaleItems(Long saleId);
+    List<SaleItemVO> getSaleItems(Long saleId);
 }

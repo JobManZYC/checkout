@@ -1,22 +1,26 @@
 package com.saoma.pos.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.saoma.pos.pojo.entity.User;
+import com.saoma.pos.pojo.dto.UserLoginDTO;
+import com.saoma.pos.pojo.dto.UserSaveDTO;
+import com.saoma.pos.pojo.vo.LoginVO;
+import com.saoma.pos.pojo.vo.UserVO;
+
 import java.util.List;
 
 public interface UserService {
 
-    List<User> findAll();
+    List<UserVO> findAll();
 
-    List<User> findByMerchantId(Long merchantId);
+    List<UserVO> findByMerchantId(Long merchantId);
 
-    Page<User> page(Long merchantId, int page, int pageSize, String keyword);
+    Page<UserVO> page(Long merchantId, int page, int pageSize, String keyword);
 
-    User findById(Long id);
+    UserVO findById(Long id);
 
-    User login(String username, String password);
+    LoginVO login(UserLoginDTO dto);
 
-    int save(User user);
+    int save(UserSaveDTO dto);
 
     int deleteById(Long id);
 }

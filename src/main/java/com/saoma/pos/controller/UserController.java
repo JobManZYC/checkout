@@ -2,16 +2,19 @@ package com.saoma.pos.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.saoma.pos.common.Result;
-import com.saoma.pos.pojo.entity.User;
+import com.saoma.pos.pojo.dto.UserLoginDTO;
+import com.saoma.pos.pojo.dto.UserSaveDTO;
+import com.saoma.pos.pojo.vo.LoginVO;
+import com.saoma.pos.pojo.vo.UserVO;
 import com.saoma.pos.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.util.HashMap;
+
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @Api(tags = "用户管理")
 @RestController
@@ -23,29 +26,21 @@ public class UserController {
 
     @ApiOperation("用户登录")
     @PostMapping("/login")
-    public Result<Map<String, Object>> login(
-            @ApiParam(value = "登录参数（username, password）", required = true)
-            @RequestBody Map<String, String> params) {
-        String username = params.get("username");
-        String password = params.get("password");
-        User user = userService.login(username, password);
-        if (user == null) return Result.error(401, "用户名或密码错误");
-        Map<String, Object> data = new HashMap<>();
-        data.put("id", user.getId());
-        data.put("username", user.getUsername());
-        data.put("realName", user.getRealName());
-        data.put("role", user.getRole());
-        data.put("merchantId", user.getMerchantId());
-        return Result.success(data);
+    public Result<LoginVO> login(
+            @ApiParam(value = "登录参数", required = true)
+            @Valid @RequestBody UserLoginDTO dto) {
+        LoginVO vo = userService.login(dto);
+        if (vo == null) return Result.error(401, "用户名或密码错误");
+        return Result.success(vo);
     }
 
     @ApiOperation("获取全部用户列表（超级管理员）")
     @GetMapping("/list")
-    public Result<List<User>> list() { return Result.success(userService.findAll()); }
+    public Result<List<UserVO>> list() { return Result.success(userService.findAll()); }
 
     @ApiOperation("根据商户ID获取用户列表")
     @GetMapping("/listByMerchant")
-    public Result<List<User>> listByMerchant(
+    public Result<List<UserVO>> listByMerchant(
             @ApiParam(value = "商户ID", required = true)
             @RequestParam Long merchantId) {
         return Result.success(userService.findByMerchantId(merchantId));
@@ -53,7 +48,7 @@ public class UserController {
 
     @ApiOperation("分页获取用户列表")
     @GetMapping("/page")
-    public Result<Page<User>> page(
+    public Result<Page<UserVO>> page(
             @ApiParam(value = "商户ID（超级管理员传null）")
             @RequestParam(required = false) Long merchantId,
             @ApiParam(value = "页码", defaultValue = "1")
@@ -62,7 +57,7 @@ public class UserController {
             @RequestParam(defaultValue = "20") int pageSize,
             @ApiParam(value = "搜索关键词（用户名/姓名/手机号）")
             @RequestParam(required = false) String keyword) {
-        Page<User> result = userService.page(merchantId, page, pageSize, keyword);
+        Page<UserVO> result = userService.page(merchantId, page, pageSize, keyword);
         return Result.success(result);
     }
 
@@ -70,7 +65,7 @@ public class UserController {
     @PostMapping("/save")
     public Result<Integer> save(
             @ApiParam(value = "用户信息", required = true)
-            @RequestBody User user) { return Result.success(userService.save(user)); }
+            @Valid @RequestBody UserSaveDTO dto) { return Result.success(userService.save(dto)); }
 
     @ApiOperation("删除用户")
     @DeleteMapping("/delete")
