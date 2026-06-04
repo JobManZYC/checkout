@@ -4,6 +4,7 @@
 
     <resultMap id="SaleResultMap" type="com.saoma.pos.entity.Sale">
         <id property="id" column="id"/>
+        <result property="merchantId" column="merchant_id"/>
         <result property="orderNo" column="order_no"/>
         <result property="totalAmount" column="total_amount"/>
         <result property="discountAmount" column="discount_amount"/>
@@ -18,14 +19,18 @@
     </resultMap>
 
     <insert id="insert" parameterType="com.saoma.pos.entity.Sale" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO sale(order_no, total_amount, discount_amount, pay_amount, pay_type,
+        INSERT INTO sale(merchant_id, order_no, total_amount, discount_amount, pay_amount, pay_type,
                          change_amount, remark, status, cashier_id, cashier_name, create_time)
-        VALUES(#{orderNo}, #{totalAmount}, #{discountAmount}, #{payAmount}, #{payType},
+        VALUES(#{merchantId}, #{orderNo}, #{totalAmount}, #{discountAmount}, #{payAmount}, #{payType},
                #{changeAmount}, #{remark}, #{status}, #{cashierId}, #{cashierName}, NOW())
     </insert>
 
     <select id="findAll" resultMap="SaleResultMap">
         SELECT * FROM sale ORDER BY id DESC LIMIT 100
+    </select>
+
+    <select id="findByMerchantId" resultMap="SaleResultMap">
+        SELECT * FROM sale WHERE merchant_id = #{merchantId} ORDER BY id DESC LIMIT 100
     </select>
 
     <select id="findById" resultMap="SaleResultMap" parameterType="long">
@@ -38,6 +43,10 @@
 
     <select id="findByDate" resultMap="SaleResultMap" parameterType="string">
         SELECT * FROM sale WHERE DATE(create_time) = #{date} ORDER BY id DESC
+    </select>
+
+    <select id="findByMerchantAndDate" resultMap="SaleResultMap">
+        SELECT * FROM sale WHERE merchant_id = #{merchantId} AND DATE(create_time) = #{date} ORDER BY id DESC
     </select>
 
     <select id="findByDateRange" resultMap="SaleResultMap">

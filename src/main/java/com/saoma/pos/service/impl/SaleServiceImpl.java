@@ -34,6 +34,7 @@ public class SaleServiceImpl implements SaleService {
         saleMapper.insert(sale);
         for (SaleItem item : items) {
             item.setSaleId(sale.getId());
+            item.setMerchantId(sale.getMerchantId());
             saleItemMapper.insert(item);
             productService.decreaseStock(item.getProductId(), item.getQuantity());
         }
@@ -43,6 +44,11 @@ public class SaleServiceImpl implements SaleService {
     @Override
     public List<Sale> findAll() {
         return saleMapper.findAll();
+    }
+
+    @Override
+    public List<Sale> findByMerchantId(Long merchantId) {
+        return saleMapper.findByMerchantId(merchantId);
     }
 
     @Override
@@ -58,6 +64,11 @@ public class SaleServiceImpl implements SaleService {
     @Override
     public List<Sale> findByDate(String date) {
         return saleMapper.findByDate(date);
+    }
+
+    @Override
+    public List<Sale> findByMerchantAndDate(Long merchantId, String date) {
+        return saleMapper.findByMerchantAndDate(merchantId, date);
     }
 
     @Override

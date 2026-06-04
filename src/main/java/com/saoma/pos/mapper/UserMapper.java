@@ -10,9 +10,11 @@ public interface UserMapper {
 
     List<User> findAll();
 
+    List<User> findByMerchantId(@Param("merchantId") Long merchantId);
+
     User findById(Long id);
 
-    User findByUsername(String username);
+    User findByUsername(@Param("username") String username);
 
     User login(@Param("username") String username, @Param("password") String password);
 

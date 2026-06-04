@@ -20,6 +20,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findByMerchantId(Long merchantId) {
+        return userMapper.findByMerchantId(merchantId);
+    }
+
+    @Override
     public User findById(Long id) {
         return userMapper.findById(id);
     }

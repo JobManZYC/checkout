@@ -18,9 +18,17 @@ public class ProductController {
     @Autowired
     private ProductService productService;
 
-    @ApiOperation("获取全部商品列表")
+    @ApiOperation("获取全部商品列表（超级管理员）")
     @GetMapping("/list")
     public Result<List<Product>> list() { return Result.success(productService.findAll()); }
+
+    @ApiOperation("根据商户ID获取商品列表")
+    @GetMapping("/merchant/{merchantId}")
+    public Result<List<Product>> listByMerchant(
+            @ApiParam(value = "商户ID", required = true)
+            @PathVariable Long merchantId) {
+        return Result.success(productService.findByMerchantId(merchantId));
+    }
 
     @ApiOperation("根据条码查询商品")
     @GetMapping("/barcode/{barcode}")
@@ -28,6 +36,17 @@ public class ProductController {
             @ApiParam(value = "商品条码", required = true, example = "6921168511280")
             @PathVariable String barcode) {
         Product p = productService.findByBarcode(barcode);
+        return p != null ? Result.success(p) : Result.error(404, "商品不存在");
+    }
+
+    @ApiOperation("根据商户+条码查询商品")
+    @GetMapping("/merchant/{merchantId}/barcode/{barcode}")
+    public Result<Product> getByMerchantAndBarcode(
+            @ApiParam(value = "商户ID", required = true)
+            @PathVariable Long merchantId,
+            @ApiParam(value = "商品条码", required = true)
+            @PathVariable String barcode) {
+        Product p = productService.findByMerchantAndBarcode(merchantId, barcode);
         return p != null ? Result.success(p) : Result.error(404, "商品不存在");
     }
 
@@ -39,9 +58,27 @@ public class ProductController {
         return Result.success(productService.search(keyword));
     }
 
+    @ApiOperation("根据商户关键词搜索商品")
+    @GetMapping("/merchant/{merchantId}/search")
+    public Result<List<Product>> searchByMerchant(
+            @ApiParam(value = "商户ID", required = true)
+            @PathVariable Long merchantId,
+            @ApiParam(value = "搜索关键词", required = true)
+            @RequestParam String keyword) {
+        return Result.success(productService.searchByMerchant(merchantId, keyword));
+    }
+
     @ApiOperation("获取所有商品分类")
     @GetMapping("/categories")
     public Result<List<String>> categories() { return Result.success(productService.findAllCategories()); }
+
+    @ApiOperation("根据商户获取商品分类")
+    @GetMapping("/merchant/{merchantId}/categories")
+    public Result<List<String>> categoriesByMerchant(
+            @ApiParam(value = "商户ID", required = true)
+            @PathVariable Long merchantId) {
+        return Result.success(productService.findCategoriesByMerchantId(merchantId));
+    }
 
     @ApiOperation("根据ID查询商品")
     @GetMapping("/{id}")

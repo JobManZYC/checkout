@@ -14,6 +14,9 @@ public class SaleItem {
     @ApiModelProperty(value = "订单ID", example = "1")
     private Long saleId;
 
+    @ApiModelProperty(value = "商户ID", example = "1")
+    private Long merchantId;
+
     @ApiModelProperty(value = "商品ID", example = "1")
     private Long productId;
 

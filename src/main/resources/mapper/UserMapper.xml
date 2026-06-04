@@ -4,6 +4,7 @@
 
     <resultMap id="UserResultMap" type="com.saoma.pos.entity.User">
         <id property="id" column="id"/>
+        <result property="merchantId" column="merchant_id"/>
         <result property="username" column="username"/>
         <result property="password" column="password"/>
         <result property="realName" column="real_name"/>
@@ -15,29 +16,34 @@
     </resultMap>
 
     <select id="findAll" resultMap="UserResultMap">
-        SELECT * FROM user
+        SELECT * FROM user ORDER BY id DESC
+    </select>
+
+    <select id="findByMerchantId" resultMap="UserResultMap">
+        SELECT * FROM user WHERE merchant_id = #{merchantId} ORDER BY id DESC
     </select>
 
     <select id="findById" resultMap="UserResultMap" parameterType="long">
         SELECT * FROM user WHERE id = #{id}
     </select>
 
-    <select id="findByUsername" resultMap="UserResultMap" parameterType="string">
+    <select id="findByUsername" resultMap="UserResultMap">
         SELECT * FROM user WHERE username = #{username}
     </select>
 
     <select id="login" resultMap="UserResultMap">
-        SELECT * FROM user WHERE username = #{username} AND password = #{password}
+        SELECT * FROM user WHERE username = #{username} AND password = #{password} AND status = 1
     </select>
 
     <insert id="insert" parameterType="com.saoma.pos.entity.User" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO user(username, password, real_name, phone, role, status, create_time, update_time)
-        VALUES(#{username}, #{password}, #{realName}, #{phone}, #{role}, #{status}, NOW(), NOW())
+        INSERT INTO user(merchant_id, username, password, real_name, phone, role, status, create_time, update_time)
+        VALUES(#{merchantId}, #{username}, #{password}, #{realName}, #{phone}, #{role}, #{status}, NOW(), NOW())
     </insert>
 
     <update id="update" parameterType="com.saoma.pos.entity.User">
         UPDATE user
-        SET username = #{username},
+        SET merchant_id = #{merchantId},
+            username = #{username},
             password = #{password},
             real_name = #{realName},
             phone = #{phone},

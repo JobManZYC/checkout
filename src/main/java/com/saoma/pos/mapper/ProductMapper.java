@@ -10,13 +10,19 @@ public interface ProductMapper {
 
     List<Product> findAll();
 
-    Product findByBarcode(String barcode);
+    List<Product> findByMerchantId(@Param("merchantId") Long merchantId);
+
+    Product findByBarcode(@Param("barcode") String barcode);
+
+    Product findByMerchantAndBarcode(@Param("merchantId") Long merchantId, @Param("barcode") String barcode);
 
     Product findById(Long id);
 
-    List<Product> findByCategory(String category);
+    List<Product> findByCategory(@Param("category") String category);
 
-    List<Product> search(String keyword);
+    List<Product> search(@Param("keyword") String keyword);
+
+    List<Product> searchByMerchant(@Param("merchantId") Long merchantId, @Param("keyword") String keyword);
 
     int insert(Product product);
 
@@ -29,4 +35,6 @@ public interface ProductMapper {
     int increaseStock(@Param("id") Long id, @Param("quantity") Integer quantity);
 
     List<String> findAllCategories();
+
+    List<String> findCategoriesByMerchantId(@Param("merchantId") Long merchantId);
 }

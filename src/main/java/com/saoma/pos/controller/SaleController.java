@@ -29,9 +29,17 @@ public class SaleController {
         return Result.success(saleService.createSale(sale, items));
     }
 
-    @ApiOperation("获取全部订单列表")
+    @ApiOperation("获取全部订单列表（超级管理员）")
     @GetMapping("/list")
     public Result<List<Sale>> list() { return Result.success(saleService.findAll()); }
+
+    @ApiOperation("根据商户ID获取订单列表")
+    @GetMapping("/merchant/{merchantId}")
+    public Result<List<Sale>> listByMerchant(
+            @ApiParam(value = "商户ID", required = true)
+            @PathVariable Long merchantId) {
+        return Result.success(saleService.findByMerchantId(merchantId));
+    }
 
     @ApiOperation("根据ID查询订单")
     @GetMapping("/{id}")
@@ -50,4 +58,14 @@ public class SaleController {
     public Result<List<Sale>> getByDate(
             @ApiParam(value = "日期（yyyy-MM-dd）", required = true, example = "2024-06-03")
             @PathVariable String date) { return Result.success(saleService.findByDate(date)); }
+
+    @ApiOperation("根据商户+日期查询订单")
+    @GetMapping("/merchant/{merchantId}/date/{date}")
+    public Result<List<Sale>> getByMerchantAndDate(
+            @ApiParam(value = "商户ID", required = true)
+            @PathVariable Long merchantId,
+            @ApiParam(value = "日期（yyyy-MM-dd）", required = true)
+            @PathVariable String date) {
+        return Result.success(saleService.findByMerchantAndDate(merchantId, date));
+    }
 }

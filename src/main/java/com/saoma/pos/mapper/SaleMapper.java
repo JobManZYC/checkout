@@ -13,11 +13,15 @@ public interface SaleMapper {
 
     List<Sale> findAll();
 
+    List<Sale> findByMerchantId(@Param("merchantId") Long merchantId);
+
     Sale findById(Long id);
 
     Sale findByOrderNo(String orderNo);
 
     List<Sale> findByDate(String date);
+
+    List<Sale> findByMerchantAndDate(@Param("merchantId") Long merchantId, @Param("date") String date);
 
     List<Sale> findByDateRange(@Param("start") Date start, @Param("end") Date end);
 

@@ -20,8 +20,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> findByMerchantId(Long merchantId) {
+        return productMapper.findByMerchantId(merchantId);
+    }
+
+    @Override
     public Product findByBarcode(String barcode) {
         return productMapper.findByBarcode(barcode);
+    }
+
+    @Override
+    public Product findByMerchantAndBarcode(Long merchantId, String barcode) {
+        return productMapper.findByMerchantAndBarcode(merchantId, barcode);
     }
 
     @Override
@@ -40,8 +50,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public List<Product> searchByMerchant(Long merchantId, String keyword) {
+        return productMapper.searchByMerchant(merchantId, keyword);
+    }
+
+    @Override
     public List<String> findAllCategories() {
         return productMapper.findAllCategories();
+    }
+
+    @Override
+    public List<String> findCategoriesByMerchantId(Long merchantId) {
+        return productMapper.findCategoriesByMerchantId(merchantId);
     }
 
     @Override
@@ -61,5 +81,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public int decreaseStock(Long id, Integer qty) {
         return productMapper.decreaseStock(id, qty);
+    }
+
+    @Override
+    public int increaseStock(Long id, Integer qty) {
+        return productMapper.increaseStock(id, qty);
     }
 }

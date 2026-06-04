@@ -12,6 +12,9 @@ public class Product {
     @ApiModelProperty(value = "商品ID", example = "1")
     private Long id;
 
+    @ApiModelProperty(value = "商户ID", example = "1")
+    private Long merchantId;
+
     @ApiModelProperty(value = "商品条码", required = true, example = "6921168511280")
     private String barcode;
 

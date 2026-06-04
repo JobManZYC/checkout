@@ -1,12 +1,13 @@
 package com.saoma.pos.service;
 
 import com.saoma.pos.entity.User;
-
 import java.util.List;
 
 public interface UserService {
 
     List<User> findAll();
+
+    List<User> findByMerchantId(Long merchantId);
 
     User findById(Long id);
 

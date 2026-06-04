@@ -34,12 +34,21 @@ public class UserController {
         data.put("username", user.getUsername());
         data.put("realName", user.getRealName());
         data.put("role", user.getRole());
+        data.put("merchantId", user.getMerchantId());
         return Result.success(data);
     }
 
-    @ApiOperation("获取全部用户列表")
+    @ApiOperation("获取全部用户列表（超级管理员）")
     @GetMapping("/list")
     public Result<List<User>> list() { return Result.success(userService.findAll()); }
+
+    @ApiOperation("根据商户ID获取用户列表")
+    @GetMapping("/merchant/{merchantId}")
+    public Result<List<User>> listByMerchant(
+            @ApiParam(value = "商户ID", required = true)
+            @PathVariable Long merchantId) {
+        return Result.success(userService.findByMerchantId(merchantId));
+    }
 
     @ApiOperation("新增或更新用户")
     @PostMapping("/save")

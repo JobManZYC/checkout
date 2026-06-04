@@ -1,19 +1,17 @@
 package com.saoma.pos.service;
 
 import com.saoma.pos.entity.Product;
-
 import java.util.List;
 
-/**
- * @author Coen
- * @date 2026-06-03 15:04
- * @description:
- */
 public interface ProductService {
-    
+
     List<Product> findAll();
 
+    List<Product> findByMerchantId(Long merchantId);
+
     Product findByBarcode(String barcode);
+
+    Product findByMerchantAndBarcode(Long merchantId, String barcode);
 
     Product findById(Long id);
 
@@ -21,11 +19,17 @@ public interface ProductService {
 
     List<Product> search(String keyword);
 
+    List<Product> searchByMerchant(Long merchantId, String keyword);
+
     List<String> findAllCategories();
+
+    List<String> findCategoriesByMerchantId(Long merchantId);
 
     int save(Product p);
 
     int deleteById(Long id);
 
     int decreaseStock(Long id, Integer qty);
+
+    int increaseStock(Long id, Integer qty);
 }
