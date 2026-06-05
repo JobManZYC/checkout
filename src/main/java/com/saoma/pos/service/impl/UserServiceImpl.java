@@ -56,8 +56,21 @@ public class UserServiceImpl implements UserService {
     public int save(UserSaveDTO dto) {
         User entity = UserConverter.toEntity(dto);
         if (entity.getId() == null) {
+            // 新增：同一商户下不允许有用户名相同的用户
+            User existByName = userMapper.selectOne(
+                    new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<User>()
+                            .eq(User::getUsername, entity.getUsername())
+                            .eq(User::getMerchantId, entity.getMerchantId()));
+            if (existByName != null) {
+                throw new RuntimeException("同一商户下已存在相同用户名的用户");
+            }
             entity.setStatus(1);
             return userMapper.insert(entity);
+        }
+        // 修改：检查用户是否存在
+        User existById = userMapper.selectById(entity.getId());
+        if (existById == null) {
+            throw new RuntimeException("用户不存在");
         }
         return userMapper.updateById(entity);
     }
