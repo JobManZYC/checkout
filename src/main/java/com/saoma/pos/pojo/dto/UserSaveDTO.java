@@ -34,4 +34,7 @@ public class UserSaveDTO implements Serializable {
 
     @ApiModelProperty(value = "角色：0-超级管理员 1-商户管理员 2-普通销售", example = "1")
     private Integer role;
+
+    @ApiModelProperty(value = "状态：0-禁用 1-启用", example = "1")
+    private Integer status;
 }

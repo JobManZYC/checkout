@@ -1,5 +1,7 @@
 package com.saoma.pos.pojo.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -7,6 +9,10 @@ import java.time.LocalDateTime;
 
 @Data
 public class BaseEntity {
+
+    @TableId(type = IdType.AUTO)
+    @ApiModelProperty(value = "用户ID", example = "1")
+    private Long id;
 
     @ApiModelProperty(value = "逻辑删除：0-有效 1-已删除")
     private Boolean deleted;

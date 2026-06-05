@@ -12,9 +12,6 @@ import lombok.EqualsAndHashCode;
 @ApiModel(description = "商户信息")
 public class Merchant extends BaseEntity {
 
-    @ApiModelProperty(value = "商户ID", example = "1")
-    private Long id;
-
     @ApiModelProperty(value = "商户名称", required = true, example = "测试便利店")
     private String name;
 

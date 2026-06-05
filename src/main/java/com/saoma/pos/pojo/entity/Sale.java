@@ -15,9 +15,6 @@ import java.util.List;
 @ApiModel(description = "销售订单")
 public class Sale extends BaseEntity {
 
-    @ApiModelProperty(value = "订单ID", example = "1")
-    private Long id;
-
     @ApiModelProperty(value = "商户ID", example = "1")
     private Long merchantId;
 

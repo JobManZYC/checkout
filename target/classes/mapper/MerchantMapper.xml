@@ -21,33 +21,6 @@
         SELECT * FROM merchant ORDER BY id DESC
     </select>
 
-    <select id="findById" resultMap="MerchantResultMap" parameterType="long">
-        SELECT * FROM merchant WHERE id = #{id}
-    </select>
-
-    <insert id="insert" parameterType="com.saoma.pos.pojo.entity.Merchant" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO merchant(name, contact_name, contact_phone, address, remark, status, deleted, create_by, update_by, create_time, update_time)
-        VALUES(#{name}, #{contactName}, #{contactPhone}, #{address}, #{remark}, #{status}, #{deleted}, #{createBy}, #{updateBy}, NOW(), NOW())
-    </insert>
-
-    <update id="update" parameterType="com.saoma.pos.pojo.entity.Merchant">
-        UPDATE merchant
-        SET name = #{name},
-            contact_name = #{contactName},
-            contact_phone = #{contactPhone},
-            address = #{address},
-            remark = #{remark},
-            status = #{status},
-            deleted = #{deleted},
-            update_by = #{updateBy},
-            update_time = NOW()
-        WHERE id = #{id}
-    </update>
-
-    <delete id="deleteById" parameterType="long">
-        DELETE FROM merchant WHERE id = #{id}
-    </delete>
-
     <select id="selectMerchantPage" resultMap="MerchantResultMap">
         SELECT * FROM merchant
         <where>

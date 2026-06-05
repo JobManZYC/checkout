@@ -1,5 +1,7 @@
 package com.saoma.pos.pojo.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,9 +13,6 @@ import lombok.EqualsAndHashCode;
 @TableName("user")
 @ApiModel(description = "系统用户")
 public class User extends BaseEntity {
-    
-    @ApiModelProperty(value = "用户ID", example = "1")
-    private Long id;
 
     @ApiModelProperty(value = "商户ID：0=超级管理员", example = "1")
     private Long merchantId;

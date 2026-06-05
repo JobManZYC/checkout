@@ -22,6 +22,9 @@ public class UserConverter {
         u.setRealName(dto.getRealName());
         u.setPhone(dto.getPhone());
         u.setRole(dto.getRole());
+        if (dto.getStatus() != null) {
+            u.setStatus(dto.getStatus());
+        }
         return u;
     }
 

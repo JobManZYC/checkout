@@ -71,6 +71,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         // 用户名不允许修改，保持原有用户名
         entity.setUsername(existById.getUsername());
+        // 如果未传 status，保持原有状态
+        if (entity.getStatus() == null) {
+            entity.setStatus(existById.getStatus());
+        }
         return baseMapper.updateById(entity);
     }
 

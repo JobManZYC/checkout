@@ -39,6 +39,7 @@ public class DataInitializer implements CommandLineRunner {
         // 2. 初始化超级管理员（如果没有任何用户）
         if (userMapper.findAllUsers().isEmpty()) {
             User superAdmin = new User();
+            superAdmin.setId(1L);
             superAdmin.setMerchantId(0L); // 0 = 超级管理员
             superAdmin.setUsername("superadmin");
             superAdmin.setPassword("123456");
