@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.saoma.pos.pojo.entity.Sale;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Mapper
@@ -17,7 +17,7 @@ public interface SaleMapper extends BaseMapper<Sale> {
 
     List<Sale> findByMerchantAndDate(@Param("merchantId") Long merchantId, @Param("date") String date);
 
-    List<Sale> findByDateRange(@Param("start") Date start, @Param("end") Date end);
+    List<Sale> findByDateRange(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 
     List<Sale> findByStatus(Integer status);
 

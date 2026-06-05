@@ -4,12 +4,14 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import java.util.Date;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @TableName("user")
 @ApiModel(description = "系统用户")
-public class User {
+public class User extends BaseEntity {
+    
     @ApiModelProperty(value = "用户ID", example = "1")
     private Long id;
 
@@ -33,10 +35,4 @@ public class User {
 
     @ApiModelProperty(value = "状态：0-禁用 1-启用", example = "1")
     private Integer status;
-
-    @ApiModelProperty(value = "创建时间")
-    private Date createTime;
-
-    @ApiModelProperty(value = "更新时间")
-    private Date updateTime;
 }

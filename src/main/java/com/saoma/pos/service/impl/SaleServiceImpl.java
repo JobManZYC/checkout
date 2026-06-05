@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,7 +36,7 @@ public class SaleServiceImpl implements SaleService {
         Sale sale = SaleConverter.toEntity(dto);
         List<SaleItem> items = SaleConverter.toItemEntityList(dto.getItems());
 
-        String orderNo = "POS" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date()) + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+        String orderNo = "POS" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
         sale.setOrderNo(orderNo);
         sale.setStatus(1);
         saleMapper.insert(sale);

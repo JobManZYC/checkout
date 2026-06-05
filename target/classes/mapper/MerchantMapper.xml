@@ -10,6 +10,9 @@
         <result property="address" column="address"/>
         <result property="remark" column="remark"/>
         <result property="status" column="status"/>
+        <result property="deleted" column="deleted"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
     </resultMap>
@@ -23,8 +26,8 @@
     </select>
 
     <insert id="insert" parameterType="com.saoma.pos.pojo.entity.Merchant" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO merchant(name, contact_name, contact_phone, address, remark, status, create_time, update_time)
-        VALUES(#{name}, #{contactName}, #{contactPhone}, #{address}, #{remark}, #{status}, NOW(), NOW())
+        INSERT INTO merchant(name, contact_name, contact_phone, address, remark, status, deleted, create_by, update_by, create_time, update_time)
+        VALUES(#{name}, #{contactName}, #{contactPhone}, #{address}, #{remark}, #{status}, #{deleted}, #{createBy}, #{updateBy}, NOW(), NOW())
     </insert>
 
     <update id="update" parameterType="com.saoma.pos.pojo.entity.Merchant">
@@ -35,6 +38,8 @@
             address = #{address},
             remark = #{remark},
             status = #{status},
+            deleted = #{deleted},
+            update_by = #{updateBy},
             update_time = NOW()
         WHERE id = #{id}
     </update>

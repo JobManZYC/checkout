@@ -4,12 +4,15 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @TableName("sale_item")
 @ApiModel(description = "订单明细项")
-public class SaleItem {
+public class SaleItem extends BaseEntity {
+
     @ApiModelProperty(value = "明细ID", example = "1")
     private Long id;
 

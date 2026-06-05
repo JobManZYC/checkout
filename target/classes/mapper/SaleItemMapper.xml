@@ -12,6 +12,11 @@
         <result property="price" column="price"/>
         <result property="quantity" column="quantity"/>
         <result property="subtotal" column="subtotal"/>
+        <result property="deleted" column="deleted"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <insert id="batchInsert">

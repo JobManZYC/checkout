@@ -5,14 +5,16 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @TableName("sale")
 @ApiModel(description = "销售订单")
-public class Sale {
+public class Sale extends BaseEntity {
+
     @ApiModelProperty(value = "订单ID", example = "1")
     private Long id;
 
@@ -48,9 +50,6 @@ public class Sale {
 
     @ApiModelProperty(value = "收银员姓名", example = "张三")
     private String cashierName;
-
-    @ApiModelProperty(value = "创建时间")
-    private Date createTime;
 
     @ApiModelProperty(value = "订单明细")
     @TableField(exist = false)
