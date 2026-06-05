@@ -19,6 +19,9 @@ public class MerchantConverter {
         m.setContactPhone(dto.getContactPhone());
         m.setAddress(dto.getAddress());
         m.setRemark(dto.getRemark());
+        if (dto.getStatus() != null) {
+            m.setStatus(dto.getStatus());
+        }
         return m;
     }
 
