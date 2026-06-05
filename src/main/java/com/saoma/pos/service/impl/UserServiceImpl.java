@@ -3,19 +3,25 @@ package com.saoma.pos.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.saoma.pos.converter.UserConverter;
+import com.saoma.pos.mapper.MerchantMapper;
 import com.saoma.pos.mapper.UserMapper;
 import com.saoma.pos.pojo.dto.UserLoginDTO;
 import com.saoma.pos.pojo.dto.UserSaveDTO;
+import com.saoma.pos.pojo.entity.Merchant;
 import com.saoma.pos.pojo.entity.User;
 import com.saoma.pos.pojo.vo.LoginVO;
 import com.saoma.pos.pojo.vo.UserVO;
 import com.saoma.pos.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
+
+    @Autowired
+    private MerchantMapper merchantMapper;
 
     @Override
     public List<UserVO> findAll() {
@@ -45,7 +51,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public LoginVO login(UserLoginDTO dto) {
+        // 1. 校验用户名密码，SQL 层已过滤 status=1 和 deleted=0
         User user = baseMapper.login(dto.getUsername(), dto.getPassword());
+        if (user == null) {
+            throw new RuntimeException("用户名或密码错误");
+        }
+        // 2. 非超级管理员（merchantId != 0），校验商户是否被禁用
+        if (user.getMerchantId() != null && user.getMerchantId() != 0) {
+            Merchant merchant = merchantMapper.selectById(user.getMerchantId());
+            if (merchant == null) {
+                throw new RuntimeException("所属商户不存在");
+            }
+            if (merchant.getStatus() != null && merchant.getStatus() == 0) {
+                throw new RuntimeException("该商户已被禁用，请联系管理员");
+            }
+        }
         return UserConverter.toLoginVO(user);
     }
 
@@ -80,8 +100,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public int deleteById(Long id) {
-        User user = new User();
-        user.setId(id);
+        User user = baseMapper.selectById(id);
+        if (user == null) {
+            throw new RuntimeException("用户不存在");
+        }
         user.setDeleted(true);
         return baseMapper.updateById(user);
     }
