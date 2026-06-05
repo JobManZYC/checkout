@@ -1,14 +1,16 @@
 package com.saoma.pos.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.saoma.pos.pojo.dto.UserLoginDTO;
 import com.saoma.pos.pojo.dto.UserSaveDTO;
+import com.saoma.pos.pojo.entity.User;
 import com.saoma.pos.pojo.vo.LoginVO;
 import com.saoma.pos.pojo.vo.UserVO;
 
 import java.util.List;
 
-public interface UserService {
+public interface UserService extends IService<User>  {
 
     List<UserVO> findAll();
 

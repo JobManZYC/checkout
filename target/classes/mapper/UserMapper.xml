@@ -19,24 +19,25 @@
     </resultMap>
 
     <select id="findByUsername" resultMap="UserResultMap">
-        SELECT * FROM user WHERE username = #{username}
+        SELECT * FROM user WHERE username = #{username} AND deleted = 0
     </select>
 
     <select id="login" resultMap="UserResultMap">
-        SELECT * FROM user WHERE username = #{username} AND password = #{password} AND status = 1
+        SELECT * FROM user WHERE username = #{username} AND password = #{password} AND status = 1 AND deleted = 0
     </select>
 
     <select id="findAllUsers" resultMap="UserResultMap">
-        SELECT * FROM user ORDER BY id DESC
+        SELECT * FROM user WHERE deleted = 0 ORDER BY id DESC
     </select>
 
     <select id="findUsersByMerchantId" resultMap="UserResultMap">
-        SELECT * FROM user WHERE merchant_id = #{merchantId} ORDER BY id DESC
+        SELECT * FROM user WHERE merchant_id = #{merchantId} AND deleted = 0 ORDER BY id DESC
     </select>
 
     <select id="selectUserPage" resultMap="UserResultMap">
         SELECT * FROM user
         <where>
+            AND deleted = 0
             <if test="merchantId != null">
                 AND merchant_id = #{merchantId}
             </if>
