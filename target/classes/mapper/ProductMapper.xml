@@ -42,4 +42,48 @@
         SELECT DISTINCT category FROM product WHERE merchant_id = #{merchantId} AND category IS NOT NULL AND category != '' ORDER BY category
     </select>
 
+    <select id="findAllProducts" resultMap="ProductResultMap">
+        SELECT * FROM product ORDER BY id DESC
+    </select>
+
+    <select id="findProductsByMerchantId" resultMap="ProductResultMap">
+        SELECT * FROM product WHERE merchant_id = #{merchantId} ORDER BY id DESC
+    </select>
+
+    <select id="selectProductPage" resultMap="ProductResultMap">
+        SELECT * FROM product
+        <where>
+            <if test="merchantId != null">
+                AND merchant_id = #{merchantId}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (name LIKE CONCAT('%', #{keyword}, '%')
+                OR barcode LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="category != null and category != ''">
+                AND category = #{category}
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+    <select id="findProductsByCategory" resultMap="ProductResultMap">
+        SELECT * FROM product WHERE category = #{category} ORDER BY id DESC
+    </select>
+
+    <select id="searchProducts" resultMap="ProductResultMap">
+        SELECT * FROM product
+        WHERE (name LIKE CONCAT('%', #{keyword}, '%')
+        OR barcode LIKE CONCAT('%', #{keyword}, '%'))
+        ORDER BY id DESC
+    </select>
+
+    <select id="searchProductsByMerchant" resultMap="ProductResultMap">
+        SELECT * FROM product
+        WHERE merchant_id = #{merchantId}
+        AND (name LIKE CONCAT('%', #{keyword}, '%')
+        OR barcode LIKE CONCAT('%', #{keyword}, '%'))
+        ORDER BY id DESC
+    </select>
+
 </mapper>

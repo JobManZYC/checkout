@@ -1,6 +1,5 @@
 package com.saoma.pos.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.saoma.pos.converter.SaleConverter;
 import com.saoma.pos.pojo.dto.SaleCheckoutDTO;
@@ -15,7 +14,6 @@ import com.saoma.pos.service.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -54,34 +52,20 @@ public class SaleServiceImpl implements SaleService {
 
     @Override
     public List<SaleVO> findAll() {
-        List<Sale> list = saleMapper.selectList(
-                new LambdaQueryWrapper<Sale>().orderByDesc(Sale::getId).last("LIMIT 100"));
+        List<Sale> list = saleMapper.findAllSales();
         return SaleConverter.toVOList(list);
     }
 
     @Override
     public List<SaleVO> findByMerchantId(Long merchantId) {
-        List<Sale> list = saleMapper.selectList(
-                new LambdaQueryWrapper<Sale>()
-                        .eq(Sale::getMerchantId, merchantId)
-                        .orderByDesc(Sale::getId)
-                        .last("LIMIT 100"));
+        List<Sale> list = saleMapper.findSalesByMerchantId(merchantId);
         return SaleConverter.toVOList(list);
     }
 
     @Override
     public Page<SaleVO> pageByMerchant(Long merchantId, int page, int pageSize, String keyword, String date) {
         Page<Sale> pageParam = new Page<>(page, pageSize);
-        LambdaQueryWrapper<Sale> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Sale::getMerchantId, merchantId);
-        if (StringUtils.hasText(keyword)) {
-            wrapper.and(w -> w.like(Sale::getOrderNo, keyword).or().like(Sale::getCashierName, keyword));
-        }
-        if (StringUtils.hasText(date)) {
-            wrapper.apply("DATE(create_time) = {0}", date);
-        }
-        wrapper.orderByDesc(Sale::getId);
-        Page<Sale> result = saleMapper.selectPage(pageParam, wrapper);
+        Page<Sale> result = saleMapper.selectSalePage(pageParam, merchantId, keyword, date);
         Page<SaleVO> voPage = new Page<>(result.getCurrent(), result.getSize(), result.getTotal());
         voPage.setRecords(SaleConverter.toVOList(result.getRecords()));
         return voPage;

@@ -30,7 +30,9 @@ public class UserController {
             @ApiParam(value = "登录参数", required = true)
             @Valid @RequestBody UserLoginDTO dto) {
         LoginVO vo = userService.login(dto);
-        if (vo == null) return Result.error(401, "用户名或密码错误");
+        if (vo == null) {
+            return Result.error(401, "用户名或密码错误");
+        }
         return Result.success(vo);
     }
 

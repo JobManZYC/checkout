@@ -43,4 +43,16 @@
         DELETE FROM merchant WHERE id = #{id}
     </delete>
 
+    <select id="selectMerchantPage" resultMap="MerchantResultMap">
+        SELECT * FROM merchant
+        <where>
+            <if test="keyword != null and keyword != ''">
+                AND (name LIKE CONCAT('%', #{keyword}, '%')
+                OR contact_name LIKE CONCAT('%', #{keyword}, '%')
+                OR contact_phone LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
 </mapper>

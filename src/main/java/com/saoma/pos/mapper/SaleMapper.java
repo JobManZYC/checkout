@@ -1,6 +1,7 @@
 package com.saoma.pos.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.saoma.pos.pojo.entity.Sale;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -21,4 +22,13 @@ public interface SaleMapper extends BaseMapper<Sale> {
     List<Sale> findByStatus(Integer status);
 
     int updateStatus(@Param("id") Long id, @Param("status") Integer status);
+
+    List<Sale> findAllSales();
+
+    List<Sale> findSalesByMerchantId(@Param("merchantId") Long merchantId);
+
+    Page<Sale> selectSalePage(Page<Sale> page,
+                              @Param("merchantId") Long merchantId,
+                              @Param("keyword") String keyword,
+                              @Param("date") String date);
 }

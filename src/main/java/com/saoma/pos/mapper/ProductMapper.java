@@ -1,6 +1,7 @@
 package com.saoma.pos.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.saoma.pos.pojo.entity.Product;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -20,4 +21,20 @@ public interface ProductMapper extends BaseMapper<Product> {
     List<String> findAllCategories();
 
     List<String> findCategoriesByMerchantId(@Param("merchantId") Long merchantId);
+
+    List<Product> findAllProducts();
+
+    List<Product> findProductsByMerchantId(@Param("merchantId") Long merchantId);
+
+    Page<Product> selectProductPage(Page<Product> page,
+                                    @Param("merchantId") Long merchantId,
+                                    @Param("keyword") String keyword,
+                                    @Param("category") String category);
+
+    List<Product> findProductsByCategory(@Param("category") String category);
+
+    List<Product> searchProducts(@Param("keyword") String keyword);
+
+    List<Product> searchProductsByMerchant(@Param("merchantId") Long merchantId,
+                                           @Param("keyword") String keyword);
 }

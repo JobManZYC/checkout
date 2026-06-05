@@ -1,6 +1,5 @@
 package com.saoma.pos.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.saoma.pos.converter.ProductConverter;
 import com.saoma.pos.pojo.dto.ProductSaveDTO;
@@ -10,7 +9,6 @@ import com.saoma.pos.mapper.ProductMapper;
 import com.saoma.pos.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -22,33 +20,20 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductVO> findAll() {
-        List<Product> list = productMapper.selectList(
-                new LambdaQueryWrapper<Product>().orderByDesc(Product::getId));
+        List<Product> list = productMapper.findAllProducts();
         return ProductConverter.toVOList(list);
     }
 
     @Override
     public List<ProductVO> findByMerchantId(Long merchantId) {
-        List<Product> list = productMapper.selectList(
-                new LambdaQueryWrapper<Product>()
-                        .eq(Product::getMerchantId, merchantId)
-                        .orderByDesc(Product::getId));
+        List<Product> list = productMapper.findProductsByMerchantId(merchantId);
         return ProductConverter.toVOList(list);
     }
 
     @Override
     public Page<ProductVO> pageByMerchant(Long merchantId, int page, int pageSize, String keyword, String category) {
         Page<Product> pageParam = new Page<>(page, pageSize);
-        LambdaQueryWrapper<Product> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Product::getMerchantId, merchantId);
-        if (StringUtils.hasText(keyword)) {
-            wrapper.and(w -> w.like(Product::getName, keyword).or().like(Product::getBarcode, keyword));
-        }
-        if (StringUtils.hasText(category)) {
-            wrapper.eq(Product::getCategory, category);
-        }
-        wrapper.orderByDesc(Product::getId);
-        Page<Product> result = productMapper.selectPage(pageParam, wrapper);
+        Page<Product> result = productMapper.selectProductPage(pageParam, merchantId, keyword, category);
         Page<ProductVO> voPage = new Page<>(result.getCurrent(), result.getSize(), result.getTotal());
         voPage.setRecords(ProductConverter.toVOList(result.getRecords()));
         return voPage;
@@ -73,29 +58,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductVO> findByCategory(String category) {
-        List<Product> list = productMapper.selectList(
-                new LambdaQueryWrapper<Product>()
-                        .eq(Product::getCategory, category)
-                        .orderByDesc(Product::getId));
+        List<Product> list = productMapper.findProductsByCategory(category);
         return ProductConverter.toVOList(list);
     }
 
     @Override
     public List<ProductVO> search(String keyword) {
-        List<Product> list = productMapper.selectList(
-                new LambdaQueryWrapper<Product>()
-                        .and(w -> w.like(Product::getName, keyword).or().like(Product::getBarcode, keyword))
-                        .orderByDesc(Product::getId));
+        List<Product> list = productMapper.searchProducts(keyword);
         return ProductConverter.toVOList(list);
     }
 
     @Override
     public List<ProductVO> searchByMerchant(Long merchantId, String keyword) {
-        List<Product> list = productMapper.selectList(
-                new LambdaQueryWrapper<Product>()
-                        .eq(Product::getMerchantId, merchantId)
-                        .and(w -> w.like(Product::getName, keyword).or().like(Product::getBarcode, keyword))
-                        .orderByDesc(Product::getId));
+        List<Product> list = productMapper.searchProductsByMerchant(merchantId, keyword);
         return ProductConverter.toVOList(list);
     }
 

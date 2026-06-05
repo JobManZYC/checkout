@@ -42,4 +42,29 @@
         UPDATE sale SET status = #{status} WHERE id = #{id}
     </update>
 
+    <select id="findAllSales" resultMap="SaleResultMap">
+        SELECT * FROM sale ORDER BY id DESC LIMIT 100
+    </select>
+
+    <select id="findSalesByMerchantId" resultMap="SaleResultMap">
+        SELECT * FROM sale WHERE merchant_id = #{merchantId} ORDER BY id DESC LIMIT 100
+    </select>
+
+    <select id="selectSalePage" resultMap="SaleResultMap">
+        SELECT * FROM sale
+        <where>
+            <if test="merchantId != null">
+                AND merchant_id = #{merchantId}
+            </if>
+            <if test="keyword != null and keyword != ''">
+                AND (order_no LIKE CONCAT('%', #{keyword}, '%')
+                OR cashier_name LIKE CONCAT('%', #{keyword}, '%'))
+            </if>
+            <if test="date != null and date != ''">
+                AND DATE(create_time) = #{date}
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
 </mapper>
