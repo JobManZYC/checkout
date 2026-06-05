@@ -64,8 +64,11 @@
                 AND (order_no LIKE CONCAT('%', #{keyword}, '%')
                 OR cashier_name LIKE CONCAT('%', #{keyword}, '%'))
             </if>
-            <if test="date != null and date != ''">
-                AND DATE(create_time) = #{date}
+            <if test="startDate != null and startDate != ''">
+                AND DATE(create_time) &gt;= #{startDate}
+            </if>
+            <if test="endDate != null and endDate != ''">
+                AND DATE(create_time) &lt;= #{endDate}
             </if>
         </where>
         ORDER BY id DESC

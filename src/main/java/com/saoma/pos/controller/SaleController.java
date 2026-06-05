@@ -54,9 +54,11 @@ public class SaleController {
             @RequestParam(defaultValue = "20") int pageSize,
             @ApiParam(value = "订单号/收银员关键词")
             @RequestParam(required = false) String keyword,
-            @ApiParam(value = "日期（yyyy-MM-dd）")
-            @RequestParam(required = false) String date) {
-        Page<SaleVO> result = saleService.pageByMerchant(merchantId, page, pageSize, keyword, date);
+            @ApiParam(value = "开始日期（yyyy-MM-dd）")
+            @RequestParam(required = false) String startDate,
+            @ApiParam(value = "结束日期（yyyy-MM-dd）")
+            @RequestParam(required = false) String endDate) {
+        Page<SaleVO> result = saleService.pageByMerchant(merchantId, page, pageSize, keyword, startDate, endDate);
         return Result.success(result);
     }
 

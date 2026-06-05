@@ -63,9 +63,9 @@ public class SaleServiceImpl implements SaleService {
     }
 
     @Override
-    public Page<SaleVO> pageByMerchant(Long merchantId, int page, int pageSize, String keyword, String date) {
+    public Page<SaleVO> pageByMerchant(Long merchantId, int page, int pageSize, String keyword, String startDate, String endDate) {
         Page<Sale> pageParam = new Page<>(page, pageSize);
-        Page<Sale> result = saleMapper.selectSalePage(pageParam, merchantId, keyword, date);
+        Page<Sale> result = saleMapper.selectSalePage(pageParam, merchantId, keyword, startDate, endDate);
         Page<SaleVO> voPage = new Page<>(result.getCurrent(), result.getSize(), result.getTotal());
         voPage.setRecords(SaleConverter.toVOList(result.getRecords()));
         return voPage;

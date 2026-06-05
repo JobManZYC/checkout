@@ -30,5 +30,6 @@ public interface SaleMapper extends BaseMapper<Sale> {
     Page<Sale> selectSalePage(Page<Sale> page,
                               @Param("merchantId") Long merchantId,
                               @Param("keyword") String keyword,
-                              @Param("date") String date);
+                              @Param("startDate") String startDate,
+                              @Param("endDate") String endDate);
 }

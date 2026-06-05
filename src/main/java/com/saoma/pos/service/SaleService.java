@@ -15,7 +15,7 @@ public interface SaleService {
 
     List<SaleVO> findByMerchantId(Long merchantId);
 
-    Page<SaleVO> pageByMerchant(Long merchantId, int page, int pageSize, String keyword, String date);
+    Page<SaleVO> pageByMerchant(Long merchantId, int page, int pageSize, String keyword, String startDate, String endDate);
 
     SaleVO findById(Long id);
 
