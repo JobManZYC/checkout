@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.saoma.pos.mapper.ProductMapper">
+<mapper namespace="com.scan.pos.mapper.ProductMapper">
 
-    <resultMap id="ProductResultMap" type="com.saoma.pos.pojo.entity.Product">
+    <resultMap id="ProductResultMap" type="com.scan.pos.pojo.entity.Product">
         <id property="id" column="id"/>
         <result property="merchantId" column="merchant_id"/>
         <result property="barcode" column="barcode"/>

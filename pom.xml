@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.saoma</groupId>
+    <groupId>com.scan</groupId>
     <artifactId>pos-server</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>

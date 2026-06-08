@@ -17,7 +17,7 @@
 ```
 src/
 ├── main/
-│   ├── java/com/saoma/pos/
+│   ├── java/com/scan/pos/
 │   │   ├── common/          # 通用类（统一返回结果 Result）
 │   │   ├── config/          # 配置类（CORS、Swagger、数据初始化）
 │   │   ├── controller/      # 控制器层

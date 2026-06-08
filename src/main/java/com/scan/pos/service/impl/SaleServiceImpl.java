@@ -1,0 +1,111 @@
+package com.scan.pos.service.impl;
+
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.scan.pos.converter.SaleConverter;
+import com.scan.pos.pojo.dto.SaleCheckoutDTO;
+import com.scan.pos.pojo.entity.Sale;
+import com.scan.pos.pojo.entity.SaleItem;
+import com.scan.pos.pojo.vo.SaleItemVO;
+import com.scan.pos.pojo.vo.SaleVO;
+import com.scan.pos.mapper.SaleItemMapper;
+import com.scan.pos.mapper.SaleMapper;
+import com.scan.pos.service.ProductService;
+import com.scan.pos.service.SaleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+import java.util.UUID;
+
+@Service
+public class SaleServiceImpl implements SaleService {
+
+    @Autowired
+    private SaleMapper saleMapper;
+    @Autowired
+    private SaleItemMapper saleItemMapper;
+    @Autowired
+    private ProductService productService;
+
+    @Override
+    @Transactional
+    public int createSale(SaleCheckoutDTO dto) {
+        Sale sale = SaleConverter.toEntity(dto);
+        List<SaleItem> items = SaleConverter.toItemEntityList(dto.getItems());
+
+        String orderNo = "POS" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss")) + UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+        sale.setOrderNo(orderNo);
+        sale.setStatus(1);
+        saleMapper.insert(sale);
+
+        for (SaleItem item : items) {
+            item.setSaleId(sale.getId());
+            item.setMerchantId(sale.getMerchantId());
+            saleItemMapper.insert(item);
+            productService.decreaseStock(item.getProductId(), item.getQuantity());
+        }
+        return 1;
+    }
+
+    @Override
+    public List<SaleVO> findAll() {
+        List<Sale> list = saleMapper.findAllSales();
+        return SaleConverter.toVOList(list);
+    }
+
+    @Override
+    public List<SaleVO> findByMerchantId(Long merchantId) {
+        List<Sale> list = saleMapper.findSalesByMerchantId(merchantId);
+        return SaleConverter.toVOList(list);
+    }
+
+    @Override
+    public Page<SaleVO> pageByMerchant(Long merchantId, int page, int pageSize, String keyword, String startDate, String endDate) {
+        Page<Sale> pageParam = new Page<>(page, pageSize);
+        Page<Sale> result = saleMapper.selectSalePage(pageParam, merchantId, keyword, startDate, endDate);
+        Page<SaleVO> voPage = new Page<>(result.getCurrent(), result.getSize(), result.getTotal());
+        voPage.setRecords(SaleConverter.toVOList(result.getRecords()));
+        return voPage;
+    }
+
+    @Override
+    public SaleVO findById(Long id) {
+        Sale entity = saleMapper.selectById(id);
+        SaleVO vo = SaleConverter.toVO(entity);
+        if (vo != null) {
+            vo.setItems(SaleConverter.toItemVOList(getSaleItemsRaw(id)));
+        }
+        return vo;
+    }
+
+    @Override
+    public SaleVO findByOrderNo(String orderNo) {
+        Sale entity = saleMapper.findByOrderNo(orderNo);
+        return SaleConverter.toVO(entity);
+    }
+
+    @Override
+    public List<SaleVO> findByDate(String date) {
+        List<Sale> list = saleMapper.findByDate(date);
+        return SaleConverter.toVOList(list);
+    }
+
+    @Override
+    public List<SaleVO> findByMerchantAndDate(Long merchantId, String date) {
+        List<Sale> list = saleMapper.findByMerchantAndDate(merchantId, date);
+        return SaleConverter.toVOList(list);
+    }
+
+    @Override
+    public List<SaleItemVO> getSaleItems(Long saleId) {
+        List<SaleItem> list = getSaleItemsRaw(saleId);
+        return SaleConverter.toItemVOList(list);
+    }
+
+    private List<SaleItem> getSaleItemsRaw(Long saleId) {
+        return saleItemMapper.findBySaleId(saleId);
+    }
+}
