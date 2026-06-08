@@ -1,6 +1,7 @@
 package com.scan.pos.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.scan.pos.common.exception.BusinessException;
 import com.scan.pos.converter.ProductConverter;
 import com.scan.pos.pojo.dto.ProductSaveDTO;
 import com.scan.pos.pojo.entity.Product;
@@ -96,7 +97,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public int deleteById(Long id) {
-        return productMapper.deleteById(id);
+        Product product = productMapper.selectById(id);
+        if (product == null) {
+            throw new BusinessException("商品不存在");
+        }
+        product.setDeleted(true);
+        return productMapper.updateById(product);
     }
 
     @Override
