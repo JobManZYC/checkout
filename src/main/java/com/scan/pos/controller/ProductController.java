@@ -1,7 +1,7 @@
 package com.scan.pos.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.scan.pos.common.Result;
+import com.scan.pos.common.result.Result;
 import com.scan.pos.pojo.dto.ProductSaveDTO;
 import com.scan.pos.pojo.vo.ProductVO;
 import com.scan.pos.service.ProductService;

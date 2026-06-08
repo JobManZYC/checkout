@@ -1,4 +1,4 @@
-package com.scan.pos.common;
+package com.scan.pos.common.result;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

@@ -2,16 +2,13 @@ package com.scan.pos.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.scan.pos.common.BusinessException;
+import com.scan.pos.common.exception.BusinessException;
 import com.scan.pos.converter.MerchantConverter;
-import com.scan.pos.mapper.UserMapper;
 import com.scan.pos.pojo.dto.MerchantSaveDTO;
 import com.scan.pos.pojo.entity.Merchant;
-import com.scan.pos.pojo.entity.User;
 import com.scan.pos.pojo.vo.MerchantVO;
 import com.scan.pos.mapper.MerchantMapper;
 import com.scan.pos.service.MerchantService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

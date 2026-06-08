@@ -1,5 +1,6 @@
-package com.scan.pos.common;
+package com.scan.pos.common.exception;
 
+import com.scan.pos.common.result.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

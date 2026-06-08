@@ -1,4 +1,4 @@
-package com.scan.pos.common;
+package com.scan.pos.common.exception;
 
 /**
  * 自定义业务异常

@@ -2,7 +2,7 @@ package com.scan.pos.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.scan.pos.common.BusinessException;
+import com.scan.pos.common.exception.BusinessException;
 import com.scan.pos.converter.UserConverter;
 import com.scan.pos.mapper.MerchantMapper;
 import com.scan.pos.mapper.UserMapper;
