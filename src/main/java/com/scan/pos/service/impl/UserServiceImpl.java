@@ -2,6 +2,7 @@ package com.scan.pos.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.scan.pos.common.BusinessException;
 import com.scan.pos.converter.UserConverter;
 import com.scan.pos.mapper.MerchantMapper;
 import com.scan.pos.mapper.UserMapper;
@@ -54,16 +55,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 1. 校验用户名密码，SQL 层已过滤 status=1 和 deleted=0
         User user = baseMapper.login(dto.getUsername(), dto.getPassword());
         if (user == null) {
-            throw new RuntimeException("用户名或密码错误");
+            throw new BusinessException("用户名或密码错误");
         }
         // 2. 非超级管理员（merchantId != 0），校验商户是否被禁用
         if (user.getMerchantId() != null && user.getMerchantId() != 0) {
             Merchant merchant = merchantMapper.selectById(user.getMerchantId());
             if (merchant == null) {
-                throw new RuntimeException("所属商户不存在");
+                throw new BusinessException("所属商户不存在");
             }
             if (merchant.getStatus() != null && merchant.getStatus() == 0) {
-                throw new RuntimeException("该商户已被禁用，请联系管理员");
+                throw new BusinessException("该商户已被禁用，请联系管理员");
             }
         }
         return UserConverter.toLoginVO(user);
@@ -79,7 +80,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                             .eq(User::getUsername, entity.getUsername())
                             .eq(User::getMerchantId, entity.getMerchantId()));
             if (existByName != null) {
-                throw new RuntimeException("同一商户下已存在相同用户名的用户");
+                throw new BusinessException("同一商户下已存在相同用户名的用户");
             }
             entity.setStatus(1);
             return baseMapper.insert(entity);
@@ -87,7 +88,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 修改：检查用户是否存在
         User existById = baseMapper.selectById(entity.getId());
         if (existById == null) {
-            throw new RuntimeException("用户不存在");
+            throw new BusinessException("用户不存在");
         }
         // 用户名不允许修改，保持原有用户名
         entity.setUsername(existById.getUsername());
@@ -102,7 +103,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public int deleteById(Long id) {
         User user = baseMapper.selectById(id);
         if (user == null) {
-            throw new RuntimeException("用户不存在");
+            throw new BusinessException("用户不存在");
         }
         user.setDeleted(true);
         return baseMapper.updateById(user);

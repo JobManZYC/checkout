@@ -33,11 +33,14 @@ com\scan\pos\pojo\vo\SaleVO.class
 com\scan\pos\pojo\dto\MerchantSaveDTO.class
 com\scan\pos\service\UserService.class
 com\scan\pos\config\MybatisPlusConfig.class
+com\scan\pos\config\RedisConfig.class
 com\scan\pos\controller\SaleController.class
 com\scan\pos\pojo\vo\SaleItemVO.class
 com\scan\pos\pojo\dto\SaleCheckoutDTO.class
 com\scan\pos\PosApplication.class
 com\scan\pos\mapper\MerchantMapper.class
+com\scan\pos\common\BusinessException.class
+com\scan\pos\common\GlobalExceptionHandler.class
 com\scan\pos\pojo\dto\UserLoginDTO.class
 com\scan\pos\service\impl\UserServiceImpl.class
 com\scan\pos\pojo\dto\UserSaveDTO.class

@@ -28,6 +28,7 @@ public class Result<T> implements Serializable {
     public static <T> Result<T> success() {
         return success(null);
     }
+
     public static <T> Result<T> error(String message) {
         Result<T> r = new Result<>();
         r.setCode(500);

@@ -2,6 +2,7 @@ package com.scan.pos.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.scan.pos.common.BusinessException;
 import com.scan.pos.converter.MerchantConverter;
 import com.scan.pos.mapper.UserMapper;
 import com.scan.pos.pojo.dto.MerchantSaveDTO;
@@ -49,7 +50,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
         // 修改：如果未传 status，保持原有状态
         Merchant existById = baseMapper.selectById(entity.getId());
         if (existById == null) {
-            throw new RuntimeException("商户不存在");
+            throw new BusinessException("商户不存在");
         }
         if (entity.getStatus() == null) {
             entity.setStatus(existById.getStatus());
@@ -61,7 +62,7 @@ public class MerchantServiceImpl extends ServiceImpl<MerchantMapper, Merchant> i
     public int deleteById(Long id) {
         Merchant merchant = baseMapper.selectById(id);
         if (merchant == null) {
-            throw new RuntimeException("商户不存在");
+            throw new BusinessException("商户不存在");
         }
         merchant.setDeleted(true);
         return baseMapper.updateById(merchant);
