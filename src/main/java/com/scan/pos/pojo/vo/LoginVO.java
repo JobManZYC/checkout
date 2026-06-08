@@ -10,6 +10,9 @@ import java.io.Serializable;
 @ApiModel(description = "登录响应")
 public class LoginVO implements Serializable {
 
+    @ApiModelProperty(value = "JWT Token（后续请求放入 Authorization: Bearer <token>）")
+    private String token;
+
     @ApiModelProperty(value = "用户ID", example = "1")
     private Long id;
 

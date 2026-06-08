@@ -19,8 +19,10 @@ com\scan\pos\pojo\entity\User.class
 com\scan\pos\config\CorsConfig.class
 com\scan\pos\pojo\entity\SaleItem.class
 com\scan\pos\converter\UserConverter.class
+com\scan\pos\common\utils\JwtUtil.class
 com\scan\pos\service\impl\MerchantServiceImpl.class
 com\scan\pos\controller\UserController.class
+com\scan\pos\config\WebConfig.class
 com\scan\pos\pojo\vo\UserVO.class
 com\scan\pos\mapper\ProductMapper.class
 com\scan\pos\pojo\entity\Product.class
@@ -42,6 +44,7 @@ com\scan\pos\PosApplication.class
 com\scan\pos\mapper\MerchantMapper.class
 com\scan\pos\common\utils\PasswordUtil.class
 com\scan\pos\pojo\dto\UserLoginDTO.class
+com\scan\pos\common\utils\LoginInterceptor.class
 com\scan\pos\service\impl\UserServiceImpl.class
 com\scan\pos\pojo\dto\UserSaveDTO.class
 com\scan\pos\mapper\SaleMapper.class

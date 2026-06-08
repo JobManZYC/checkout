@@ -3,6 +3,7 @@ package com.scan.pos.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.scan.pos.common.exception.BusinessException;
+import com.scan.pos.common.utils.JwtUtil;
 import com.scan.pos.common.utils.PasswordUtil;
 import com.scan.pos.converter.UserConverter;
 import com.scan.pos.mapper.MerchantMapper;
@@ -15,15 +16,30 @@ import com.scan.pos.pojo.vo.LoginVO;
 import com.scan.pos.pojo.vo.UserVO;
 import com.scan.pos.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     @Autowired
     private MerchantMapper merchantMapper;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
+    /** 登录失败最大次数 */
+    private static final int MAX_FAIL_COUNT = 5;
+    /** 锁定时间（分钟） */
+    private static final int LOCK_MINUTES = 15;
+    /** 密码强度正则：至少6位，包含字母和数字 */
+    private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[a-zA-Z])(?=.*\\d).{6,}$");
+    /** Redis Key 前缀：登录失败计数 */
+    private static final String LOGIN_FAIL_KEY = "login:fail:";
 
     @Override
     public List<UserVO> findAll() {
@@ -53,12 +69,44 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public LoginVO login(UserLoginDTO dto) {
-        // 1. 根据用户名查询用户（SQL 层已过滤 status=1 和 deleted=0），再比对加密密码
-        User user = baseMapper.login(dto.getUsername());
-        if (user == null || !PasswordUtil.matches(dto.getPassword(), user.getPassword())) {
-            throw new BusinessException("用户名或密码错误");
+        String username = dto.getUsername();
+        String failKey = LOGIN_FAIL_KEY + username;
+
+        // 1. 检查是否已被锁定
+        String failCountStr = stringRedisTemplate.opsForValue().get(failKey);
+        int failCount = failCountStr != null ? Integer.parseInt(failCountStr) : 0;
+        if (failCount >= MAX_FAIL_COUNT) {
+            Long ttl = stringRedisTemplate.getExpire(failKey);
+            long remainingMinutes = (ttl != null && ttl > 0) ? ttl / 60 + 1 : LOCK_MINUTES;
+            throw new BusinessException("账号已被锁定，请" + remainingMinutes + "分钟后重试");
         }
-        // 2. 非超级管理员（merchantId != 0），校验商户是否被禁用
+
+        // 2. 根据用户名查询用户（SQL 层已过滤 status=1 和 deleted=0）
+        User user = baseMapper.login(username);
+
+        // 3. 密码校验（兼容 BCrypt 和旧版 SHA-256）
+        if (user == null || !PasswordUtil.matches(dto.getPassword(), user.getPassword())) {
+            // 登录失败：计数+1，首次设置过期时间
+            failCount = failCount + 1;
+            if (failCount == 1) {
+                stringRedisTemplate.opsForValue().set(failKey, String.valueOf(failCount), LOCK_MINUTES, TimeUnit.MINUTES);
+            } else {
+                stringRedisTemplate.opsForValue().increment(failKey);
+                // 续期锁定窗口
+                stringRedisTemplate.expire(failKey, LOCK_MINUTES, TimeUnit.MINUTES);
+            }
+            int remaining = MAX_FAIL_COUNT - failCount;
+            if (remaining > 0) {
+                throw new BusinessException("用户名或密码错误，还剩" + remaining + "次尝试机会");
+            } else {
+                throw new BusinessException("账号已被锁定，请" + LOCK_MINUTES + "分钟后重试");
+            }
+        }
+
+        // 4. 登录成功：清除失败计数
+        stringRedisTemplate.delete(failKey);
+
+        // 5. 非超级管理员（merchantId != 0），校验商户是否被禁用
         if (user.getMerchantId() != null && user.getMerchantId() != 0) {
             Merchant merchant = merchantMapper.selectById(user.getMerchantId());
             if (merchant == null) {
@@ -68,15 +116,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 throw new BusinessException("该商户已被禁用，请联系管理员");
             }
         }
-        return UserConverter.toLoginVO(user);
+
+        // 6. 生成 JWT Token
+        String token = JwtUtil.generateToken(user.getId(), user.getUsername(), user.getRole(), user.getMerchantId());
+
+        // 7. 组装返回
+        LoginVO vo = UserConverter.toLoginVO(user);
+        vo.setToken(token);
+        return vo;
     }
 
     @Override
     public int save(UserSaveDTO dto) {
         User entity = UserConverter.toEntity(dto);
-        // 密码加密：新增时必须加密，修改时仅当传了新密码才加密
         if (entity.getId() == null) {
-            // 新增：同一商户下不允许有用户名相同的用户
+            // ========== 新增 ==========
+            // 密码强度校验
+            validatePasswordStrength(entity.getPassword());
+
+            // 同一商户下不允许有用户名相同的用户
             User existByName = baseMapper.selectOne(
                     new com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper<User>()
                             .eq(User::getUsername, entity.getUsername())
@@ -88,15 +146,16 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             entity.setPassword(PasswordUtil.encode(entity.getPassword()));
             return baseMapper.insert(entity);
         }
-        // 修改：检查用户是否存在
+        // ========== 修改 ==========
         User existById = baseMapper.selectById(entity.getId());
         if (existById == null) {
             throw new BusinessException("用户不存在");
         }
-        // 用户名不允许修改，保持原有用户名
+        // 用户名不允许修改
         entity.setUsername(existById.getUsername());
-        // 如果传了密码则加密更新，否则保持原密码
+        // 如果传了新密码，校验强度并加密
         if (entity.getPassword() != null && !entity.getPassword().isEmpty()) {
+            validatePasswordStrength(entity.getPassword());
             entity.setPassword(PasswordUtil.encode(entity.getPassword()));
         } else {
             entity.setPassword(existById.getPassword());
@@ -106,6 +165,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             entity.setStatus(existById.getStatus());
         }
         return baseMapper.updateById(entity);
+    }
+
+    /**
+     * 密码强度校验：至少6位，包含字母和数字
+     */
+    private void validatePasswordStrength(String rawPassword) {
+        if (rawPassword == null || rawPassword.isEmpty()) {
+            throw new BusinessException("密码不能为空");
+        }
+        if (!PASSWORD_PATTERN.matcher(rawPassword).matches()) {
+            throw new BusinessException("密码至少6位，且必须包含字母和数字");
+        }
     }
 
     @Override
