@@ -23,7 +23,7 @@
     </select>
 
     <select id="login" resultMap="UserResultMap">
-        SELECT * FROM user WHERE username = #{username} AND password = #{password} AND status = 1 AND deleted = 0
+        SELECT * FROM user WHERE username = #{username} AND status = 1 AND deleted = 0
     </select>
 
     <select id="findAllUsers" resultMap="UserResultMap">

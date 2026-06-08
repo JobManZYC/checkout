@@ -2,11 +2,13 @@ com\scan\pos\pojo\entity\Sale.class
 com\scan\pos\pojo\vo\MerchantVO.class
 com\scan\pos\config\DataInitializer.class
 com\scan\pos\pojo\dto\SaleItemDTO.class
+com\scan\pos\common\result\Result.class
 com\scan\pos\pojo\dto\ProductSaveDTO.class
 com\scan\pos\pojo\vo\ProductVO.class
 com\scan\pos\config\SwaggerConfig.class
 com\scan\pos\controller\ProductController.class
 com\scan\pos\converter\MerchantConverter.class
+com\scan\pos\common\exception\GlobalExceptionHandler.class
 com\scan\pos\converter\ProductConverter.class
 com\scan\pos\service\impl\ProductServiceImpl.class
 com\scan\pos\pojo\entity\Merchant.class
@@ -15,7 +17,6 @@ com\scan\pos\pojo\entity\BaseEntity.class
 com\scan\pos\mapper\UserMapper.class
 com\scan\pos\pojo\entity\User.class
 com\scan\pos\config\CorsConfig.class
-com\scan\pos\common\Result.class
 com\scan\pos\pojo\entity\SaleItem.class
 com\scan\pos\converter\UserConverter.class
 com\scan\pos\service\impl\MerchantServiceImpl.class
@@ -39,10 +40,10 @@ com\scan\pos\pojo\vo\SaleItemVO.class
 com\scan\pos\pojo\dto\SaleCheckoutDTO.class
 com\scan\pos\PosApplication.class
 com\scan\pos\mapper\MerchantMapper.class
-com\scan\pos\common\BusinessException.class
-com\scan\pos\common\GlobalExceptionHandler.class
+com\scan\pos\common\utils\PasswordUtil.class
 com\scan\pos\pojo\dto\UserLoginDTO.class
 com\scan\pos\service\impl\UserServiceImpl.class
 com\scan\pos\pojo\dto\UserSaveDTO.class
 com\scan\pos\mapper\SaleMapper.class
 com\scan\pos\service\SaleService.class
+com\scan\pos\common\exception\BusinessException.class

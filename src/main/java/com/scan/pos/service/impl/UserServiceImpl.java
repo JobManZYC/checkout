@@ -3,6 +3,7 @@ package com.scan.pos.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.scan.pos.common.exception.BusinessException;
+import com.scan.pos.common.utils.PasswordUtil;
 import com.scan.pos.converter.UserConverter;
 import com.scan.pos.mapper.MerchantMapper;
 import com.scan.pos.mapper.UserMapper;
@@ -52,9 +53,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public LoginVO login(UserLoginDTO dto) {
-        // 1. 校验用户名密码，SQL 层已过滤 status=1 和 deleted=0
-        User user = baseMapper.login(dto.getUsername(), dto.getPassword());
-        if (user == null) {
+        // 1. 根据用户名查询用户（SQL 层已过滤 status=1 和 deleted=0），再比对加密密码
+        User user = baseMapper.login(dto.getUsername());
+        if (user == null || !PasswordUtil.matches(dto.getPassword(), user.getPassword())) {
             throw new BusinessException("用户名或密码错误");
         }
         // 2. 非超级管理员（merchantId != 0），校验商户是否被禁用
@@ -73,6 +74,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public int save(UserSaveDTO dto) {
         User entity = UserConverter.toEntity(dto);
+        // 密码加密：新增时必须加密，修改时仅当传了新密码才加密
         if (entity.getId() == null) {
             // 新增：同一商户下不允许有用户名相同的用户
             User existByName = baseMapper.selectOne(
@@ -83,6 +85,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 throw new BusinessException("同一商户下已存在相同用户名的用户");
             }
             entity.setStatus(1);
+            entity.setPassword(PasswordUtil.encode(entity.getPassword()));
             return baseMapper.insert(entity);
         }
         // 修改：检查用户是否存在
@@ -92,6 +95,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         // 用户名不允许修改，保持原有用户名
         entity.setUsername(existById.getUsername());
+        // 如果传了密码则加密更新，否则保持原密码
+        if (entity.getPassword() != null && !entity.getPassword().isEmpty()) {
+            entity.setPassword(PasswordUtil.encode(entity.getPassword()));
+        } else {
+            entity.setPassword(existById.getPassword());
+        }
         // 如果未传 status，保持原有状态
         if (entity.getStatus() == null) {
             entity.setStatus(existById.getStatus());

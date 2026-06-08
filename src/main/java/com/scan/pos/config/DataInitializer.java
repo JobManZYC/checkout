@@ -1,4 +1,5 @@
 package com.scan.pos.config;
+import com.scan.pos.common.utils.PasswordUtil;
 import com.scan.pos.pojo.entity.Merchant;
 import com.scan.pos.pojo.entity.Product;
 import com.scan.pos.pojo.entity.User;
@@ -42,7 +43,7 @@ public class DataInitializer implements CommandLineRunner {
             superAdmin.setId(1L);
             superAdmin.setMerchantId(0L); // 0 = 超级管理员
             superAdmin.setUsername("superadmin");
-            superAdmin.setPassword("123456");
+            superAdmin.setPassword(PasswordUtil.encode("123456"));
             superAdmin.setRealName("超级管理员");
             superAdmin.setPhone("13900000000");
             superAdmin.setRole(0); // 0 = 超级管理员
@@ -53,7 +54,7 @@ public class DataInitializer implements CommandLineRunner {
             User merchantAdmin = new User();
             merchantAdmin.setMerchantId(defaultMerchantId);
             merchantAdmin.setUsername("admin");
-            merchantAdmin.setPassword("123456");
+            merchantAdmin.setPassword(PasswordUtil.encode("123456"));
             merchantAdmin.setRealName("商户管理员");
             merchantAdmin.setPhone("13800000000");
             merchantAdmin.setRole(1); // 1 = 商户管理员
@@ -64,7 +65,7 @@ public class DataInitializer implements CommandLineRunner {
             User cashier = new User();
             cashier.setMerchantId(defaultMerchantId);
             cashier.setUsername("cashier");
-            cashier.setPassword("123456");
+            cashier.setPassword(PasswordUtil.encode("123456"));
             cashier.setRealName("普通销售");
             cashier.setPhone("13800000001");
             cashier.setRole(2); // 2 = 普通销售
